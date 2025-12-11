@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chapter 1 – Introduction to DevOps and Continuous Delivery</title>
+</head>
+<body>
+
+<h1>Chapter 1. Introduction to DevOps and Continuous Delivery</h1>
+
+<p>Welcome to Practical DevOps!</p>
+
+<p>
+    The first chapter of this book will deal with the background of DevOps and setting the scene for how DevOps fits into 
+    the wider world of Agile systems development.
+</p>
+
+<p>
+    An important part of DevOps is being able to explain to coworkers in your organization what DevOps is 
+    and what it isn't.
+</p>
+
+<p>
+    The faster you can get everyone aboard the DevOps train, the faster you can get to the part where you perform 
+    the actual technical implementation!
+</p>
+
+<h2>In this chapter, we will cover the following topics:</h2>
+<ul>
+    <li>Introducing DevOps</li>
+    <li>How fast is fast?</li>
+    <li>The Agile wheel of wheels</li>
+    <li>The cargo cult Agile fallacy</li>
+    <li>DevOps and ITIL</li>
+</ul>
+
+<hr>
+
+<h2>Introducing DevOps</h2>
+
+<p>
+    DevOps is, by definition, a field that spans several disciplines. It is a field that is very practical and hands-on, 
+    but at the same time, you must understand both the technical background and the nontechnical cultural aspects. 
+    This book covers both the practical and soft skills required for a best-of-breed DevOps implementation 
+    in your organization.
+</p>
+
+<p>
+    The word <strong>"DevOps"</strong> is a combination of the words <em>"development"</em> and <em>"operation"</em>. </p>
+    <img src="images/DevOps.webp" alt="DevOps Illustration">
+    <p>
+    This wordplay already serves to give us a hint of the basic nature of the idea behind DevOps. 
+    It is a practice where collaboration between different disciplines of software development is encouraged.
+</p>
+
+<p>
+    The origin of the word DevOps and the early days of the DevOps movement can be tracked rather precisely: 
+    Patrick Debois is a software developer and consultant with experience in many fields within IT. 
+    He was frustrated with the divide between developers and operations personnel. He tried getting people interested 
+    in the problem at conferences, but there wasn't much interest initially.
+</p>
+
+<p>
+    In 2009, there was a well-received talk at the O'Reilly Velocity Conference: 
+    <strong>"10+ Deploys per Day: Dev and Ops Cooperation at Flickr."</strong> 
+    <img src="images/OreillyVelocity.jpg" alt="DevOps Velocity Illustration">
+
+</p>   
+<p>    Patrick then decided to organize an event 
+    in Ghent, Belgium, called DevOpsDays. </p>
+    <img src="images/DevOpsDays.jpg" alt="DevOpsDays Illustration"> 
+<p>This time, there was much interest, and the conference was a success. 
+    The name "DevOpsDays" struck a chord, and the conference has become a recurring event. 
+    DevOpsDays was abbreviated to "DevOps" in conversations on Twitter and various Internet forums.
+</p>
+
+<p>
+    The DevOps movement has its roots in Agile software development principles. 
+    The Agile Manifesto was written in 2001 by a number of individuals wanting to improve the then current status quo 
+    of system development and find new ways of working in the software development industry. 
+    The following is an excerpt from the Agile Manifesto, the now classic text:
+</p>
+
+<blockquote>
+    <!--"Individuals and interactions over processes and tools<br>
+    Working software over comprehensive documentation<br>
+    Customer collaboration over contract negotiation<br>
+    Responding to change over following a plan<br><br>
+        That is, while there is value in the items on the right, we value the items on the left more."
+    -->
+    <img src="images/AgileManifesto.jpg" alt="AgileManifesto Illustration"> 
+   
+</blockquote>
+
+<p>
+    In light of this, DevOps can be said to relate to the first principle, 
+    <strong>"Individuals and interactions over processes and tools."</strong>
+</p>
+
+<p>
+    This might be seen as a fairly obviously beneficial way to work—why do we even have to state this obvious fact? 
+    Well, if you have ever worked in any large organization, you will know that the opposite principle seems to be 
+    in operation instead. </p>
+     <img src="images/Wall.png" alt="DevOps Anti-Pattern Image"> 
+    <p>Walls between different parts of an organization tend to form easily, even in smaller 
+    organizations, where at first it would appear to be impossible for such walls to form.
+</p>
+
+<p>
+    DevOps, then, tends to emphasize that interactions between individuals are very important, and that technology 
+    might possibly assist in making these interactions happen and tear down the walls inside organizations.
+</p>
+
+<img src="images/noWalls.png" alt="DevOps Pattern Image"> 
+
+<p>
+    A very simple example might be the choice of systems used to report bugs. 
+    Quite often, development teams and quality assurance teams use different systems to handle tasks and bugs. 
+    This creates unnecessary friction between the teams and further separates them when they should really focus 
+    on working together instead. The operations team might, in turn, use a third system to handle requests for deployment.
+</p>
+
+<p>
+    An engineer with a DevOps mindset will immediately recognize all three systems as workflow systems 
+    with similar properties. It should be possible for everyone in the three different teams to use the same system, 
+    perhaps tweaked to generate different views. A further benefit is reduced maintenance costs.
+</p>
+
+<p>
+    Another core goal of DevOps is automation and Continuous Delivery. Simply put, automating repetitive 
+    and tedious tasks leaves more time for human interaction, where true value can be created.
+</p>
+
+<hr>
+
+<h2>How fast is fast?</h2>
+
+<p>
+    The turnaround for DevOps processes must be fast. We need to consider time to market in the larger perspective, 
+    and simply stay focused on our tasks in the smaller perspective. This line of thought is also held by the 
+    Continuous Delivery movement.
+</p>
+
+<p>
+    As with many things Agile, many of the ideas in DevOps and Continuous Delivery are in fact different names 
+    of the same basic concepts. There really isn't any contention between the two concepts; 
+    they are two sides of the same coin.
+</p>
+
+<p>
+    DevOps engineers work on making enterprise processes faster, more efficient, and more reliable. 
+    Repetitive manual labor, which is error prone, is removed whenever possible.
+</p>
+
+<p>
+    It's easy, however, to lose track of the goal when working with DevOps implementations. 
+    Doing nothing faster is of no use to anyone. Instead, we must keep track of delivering increased business value.
+</p>
+
+<p>
+    For instance, increased communication between roles in the organization has clear value. 
+    Product owners may want to see progress regularly. Delivering incremental improvements quickly to 
+    test environments supports this need.
+</p>
+
+<p>
+    Another perspective: If you ever find yourself waiting too long, something is wrong with your tools or processes. 
+    If you are watching robot balloon-shooting videos during compile time, your compile times are too long!
+</p>
+
+<p>
+    The same applies to teams waiting for manual deploys. This idling is extremely expensive. 
+    We must help unlock creative potential by eliminating unnecessary overhead.
+</p>
+
+<hr>
+
+<h2>The Agile wheel of wheels</h2>
+
+<img src="images/AgileWheel.webp" alt="Agile Wheel"> 
+
+<p>
+    There are several different cycles in Agile development, from Portfolio level through Scrum and Kanban 
+    cycles down to Continuous Integration. Kanban emphasizes the 24-hour cycle and is popular in operations teams. 
+    Scrum cycles are 2–4 weeks and used by development teams. Longer cycles, such as Program Increments, 
+    span several sprints and are part of the SAFe framework.
+</p>
+
+<p>
+    DevOps must support all these cycles, because DevOps is fundamentally about cooperation between disciplines 
+    in an Agile organization.
+</p>
+
+<p>
+    The most obvious and measurable benefits of DevOps occur in the shorter cycles, which then improve the longer cycles.
+</p>
+
+<h3>Examples of DevOps benefits to Agile cycles:</h3>
+<ul>
+    <li>Deployment systems maintained by DevOps teams make Scrum deliveries faster and more efficient.</li>
+    <li>Manual deployments in some organizations take several days; DevOps drastically reduces this time.</li>
+    <li>Kanban requires extremely fast deployment cycles—ideally much faster than 24 hours.</li>
+    <li>With Continuous Delivery pipelines, code can move from commit to production in minutes.</li>
+</ul>
+
+<hr>
+
+<h2>Beware the cargo cult Agile fallacy</h2>
+
+<p>
+    Richard Feynman coined the term “cargo cult science” to describe imitating the form of something while 
+    missing the essence—similar to Melanesian islanders building imitation runways expecting planes to return.
+</p>
+
+<img src="images/cargocult.jpg" alt="A cargo cult Agile aeroplane"> 
+
+<p>
+    We are not Agile just because we hold morning stand-ups. We are not doing DevOps just because we installed Puppet 
+    that only operations knows how to use.
+</p>
+
+<p>
+    It is vital to keep track of goals and continuously question whether our activities bring value. 
+    Agile frameworks help with this, but only if feedback loops—such as Scrum retrospectives—are taken seriously.
+</p>
+
+<p>
+    A common issue is that retrospective findings never get acted on, often because the root causes lie elsewhere 
+    in the organization. This reduces the effectiveness of Agile processes.
+</p>
+
+<p>
+    DevOps helps solve this by emphasizing cooperation between roles and breaking silos.
+</p>
+
+<p>
+    Use Agile mechanisms such as retrospectives, but don’t treat these methods as gospel. 
+    Adapt based on what works for your team.
+</p>
+
+<hr>
+
+<h2>DevOps and ITIL</h2>
+
+<p>
+    This section explains how DevOps and other ways of working coexist and fit together in a larger whole.
+</p>
+
+<p>
+    DevOps aligns well with many Agile and Lean frameworks. SAFe specifically mentions DevOps. 
+    There is usually no conflict between Agile practices and DevOps.
+</p>
+
+<p>
+    The situation is different with ITIL. ITIL is used by large and mature organizations to formalize many 
+    life cycle processes. DevOps and Continuous Delivery advocate small, frequent changes, and ITIL can appear 
+    opposite—but this is not accurate.
+</p>
+
+<p>
+    Large monolithic legacy systems require structured processes such as ITIL. Many organizations work with such systems.
+</p>
+
+<p>
+    Many ITIL practices map directly to DevOps concepts. ITIL prescribes configuration management and CMDBs, 
+    which are also essential in DevOps.
+</p>
+
+<hr>
+
+<h2>Summary</h2>
+
+<p>
+    This chapter presented a brief overview of the background of the DevOps movement. 
+    We discussed the history of DevOps and its roots in development and operations, as well as in the Agile movement. 
+    We also explored how ITIL and DevOps coexist in large organizations. 
+    The cargo cult anti-pattern was explained and the importance of avoiding it. 
+    You should now understand where DevOps fits in the larger Agile context and how it supports Agile development cycles.
+</p>
+
+<p>
+    We will gradually move toward more technical and hands-on subjects. 
+    The next chapter will present an overview of what the technical systems we tend to focus on in DevOps look like.
+</p>
+
+</body>
+</html>
