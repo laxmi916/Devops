@@ -3,6 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <title>Chapter 1 – Introduction to DevOps and Continuous Delivery</title>
+
+      <style>
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      line-height: 1.5;
+      padding: 24px;
+      background: #f7f9fc;
+      color: #0f1724;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 6px 20px rgba(15,23,36,0.08);
+      padding: 20px;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 1.4rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+    caption {
+      caption-side: top;
+      text-align: left;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    thead th {
+      text-align: left;
+      background: #f1f5f9;
+      padding: 10px 12px;
+      border-bottom: 2px solid #e2e8f0;
+      font-weight: 600;
+    }
+    tbody td {
+      padding: 12px;
+      vertical-align: top;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    tbody tr:hover {
+      background: #fcfdff;
+    }
+    .param {
+      width: 18%;
+      font-weight: 600;
+      background: #fcfcfe;
+    }
+    .note {
+      font-size: 0.95rem;
+      color: #334155;
+    }
+    @media (max-width: 700px) {
+      .container { padding: 12px; }
+      thead { display: none; }
+      table, tbody, tr, td { display: block; width: 100%; }
+      tr { margin-bottom: 12px; }
+      td { padding-left: 50%; position: relative; }
+      td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 12px;
+        width: calc(50% - 24px);
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .param { display: none; }
+    }
+  </style>
 </head>
 <body>
 
@@ -242,6 +315,51 @@
 <hr>
 
 <h2>DevOps and ITIL</h2>
+<img src="images/itil.jpg" alt="ITIL"> 
+
+<section>
+  <h2>1) Service Strategy</h2>
+  <p>
+    All managers follow instructions to develop a service strategy that ensures the company can manage all associated costs and risks. 
+    There are multiple roles involved in service strategy, defined as follows:
+  </p>
+  <ul>
+    <li><strong>A) Business Relationship Manager</strong></li>
+    <li><strong>B) Finance Manager</strong></li>
+    <li><strong>C) IT Steering Group (ISG)</strong></li>
+    <li><strong>D) Demand Manager</strong></li>
+    <li><strong>E) Service Strategy Manager</strong></li>
+    <li><strong>F) Service Portfolio Manager</strong></li>
+  </ul>
+</section>
+
+<section>
+  <h2>2) Service Operation</h2>
+  <p>
+    Service operation includes technical support teams and application management that respond when an issue impacts the business.
+  </p>
+</section>
+
+<section>
+  <h2>3) Service Design</h2>
+  <p>
+    It involves developing the service’s architecture and translating the business needs into technical requirements.
+  </p>
+</section>
+
+<section>
+  <h2>4) Service Transition</h2>
+  <p>
+    In this stage, all assets are controlled to deliver a complete testing and integration service.
+  </p>
+</section>
+
+<section>
+  <h2>5) Service Improvement</h2>
+  <p>
+    It is a reflective approach that involves four stages to ensure services remain aligned with the business’s demands.
+  </p>
+</section>
 
 <p>
     This section explains how DevOps and other ways of working coexist and fit together in a larger whole.
@@ -267,6 +385,154 @@
     which are also essential in DevOps.
 </p>
 
+ <table aria-describedby="compare-note">
+      <caption id="compare-note">A clear comparison of DevOps and ITIL across common parameters.</caption>
+      <thead>
+        <tr>
+          <th>Parameters</th>
+          <th>DevOps</th>
+          <th>ITIL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="param" data-label="Parameters">Purpose / Delivery Focus</td>
+          <td data-label="DevOps">
+            <div class="note">
+              DevOps focuses on speeding up software delivery by improving collaboration between <strong>Development (Dev)</strong> and <strong>Operations (Ops)</strong> teams. It reduces delays and enables faster releases.
+            </div>
+          </td>
+          <td data-label="ITIL">
+            <div class="note">
+              ITIL (IT Infrastructure Library) focuses on aligning IT services with <strong>business needs</strong>. It ensures services are delivered in a structured, consistent, and managed way.
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="param" data-label="Parameters">Lifecycle Stages</td>
+          <td data-label="DevOps">
+            <div class="note">
+              DevOps follows a continuous, iterative lifecycle:<br>
+              1. <strong>Development</strong> – Write code<br>
+              2. <strong>Testing</strong> – Validate code<br>
+              3. <strong>Integration</strong> – Combine changes<br>
+              4. <strong>Deployment</strong> – Release to production<br>
+              5. <strong>Monitoring</strong> – Track performance & issues
+            </div>
+          </td>
+          <td data-label="ITIL">
+            <div class="note">
+              ITIL follows a service-oriented lifecycle:<br>
+              1. <strong>Service Strategy</strong> – Plan which services are needed<br>
+              2. <strong>Service Design</strong> – Design the service<br>
+              3. <strong>Service Transition</strong> – Build and deploy the service<br>
+              4. <strong>Service Operation</strong> – Manage day-to-day operations<br>
+              5. <strong>Continual Service Improvement</strong> – Improve services over time
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="param" data-label="Parameters">Change Management</td>
+          <td data-label="DevOps">
+            <div class="note">
+              Changes are anticipated early and integrated throughout the development cycle, enabling frequent updates and rapid releases with automation and testing.
+            </div>
+          </td>
+          <td data-label="ITIL">
+            <div class="note">
+              ITIL prescribes a formal <strong>Change Management</strong> process: every change is reviewed, approved, scheduled, and documented to reduce risk and preserve stability.
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="param" data-label="Parameters">Main Goal</td>
+          <td data-label="DevOps">
+            <div class="note">
+              Improve collaboration, increase automation, speed up delivery, and enable continuous feedback and improvement.
+            </div>
+          </td>
+          <td data-label="ITIL">
+            <div class="note">
+              Standardize IT service management to deliver reliable, consistent, and high-quality IT services that meet business requirements.
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="param" data-label="Parameters">Approach</td>
+          <td data-label="DevOps">
+            <div class="note">
+              Collaborative + automated. Breaks down silos using tools and pipelines (e.g., Git, CI servers, containers, infrastructure-as-code).
+            </div>
+          </td>
+          <td data-label="ITIL">
+            <div class="note">
+              Process-driven + structured. Emphasizes documented policies, roles, and best practices for managing IT services.
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="param" data-label="Parameters">Services Handling</td>
+          <td data-label="DevOps">
+            <div class="note">
+              Focus on <strong>CI/CD</strong> (Continuous Integration & Continuous Delivery) to build, test, and deploy rapidly and reliably.
+            </div>
+          </td>
+          <td data-label="ITIL">
+            <div class="note">
+              Focus on creating, testing, managing, and supporting IT services end-to-end so they meet agreed service levels and business needs.
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="param" data-label="Parameters">Speed vs Control</td>
+          <td data-label="DevOps">
+            <div class="note">
+              Prioritizes <strong>speed</strong>, automation, and frequent updates.
+            </div>
+          </td>
+          <td data-label="ITIL">
+            <div class="note">
+              Prioritizes <strong>control</strong>, stability, risk reduction, and compliance.
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="param" data-label="Parameters">Team Culture</td>
+          <td data-label="DevOps">
+            <div class="note">
+              Encourages open communication, shared responsibility, and fast feedback loops.
+            </div>
+          </td>
+          <td data-label="ITIL">
+            <div class="note">
+              Emphasizes clear roles, documented responsibilities, and formal agreements (SLAs).
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="param" data-label="Parameters">Typical Use Cases</td>
+          <td data-label="DevOps">
+            <div class="note">
+              Fast-paced environments such as startups, SaaS product teams, and cloud-native applications.
+            </div>
+          </td>
+          <td data-label="ITIL">
+            <div class="note">
+              Large organizations needing stable, regulated IT environments: banking, telecom, healthcare, government, and enterprises.
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
 <hr>
 
 <h2>Summary</h2>
@@ -286,5 +552,6 @@
 
 </body>
 </html>
+
 
 
