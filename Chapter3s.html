@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chapter 3 – How DevOps Affects Architecture</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+        }
+        h1, h2, h3 {
+            color: 2c3e50;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        code {
+            background-color: f4f4f4;
+            padding: 4px 6px;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: f4f4f4;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        blockquote {
+            border-left: 4px solid 3498db;
+            padding-left: 10px;
+            color: 555;
+            margin: 10px 0;
+        }
+         body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        p {
+            margin-bottom: 12px;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        .factor {
+            background-color: #f4f6f7;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #3498db;
+        }
+        .example {
+            background-color: #eef;
+            padding: 10px;
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Chapter 3 – How DevOps Affects Architecture</h1>
+
+ <h2>1. What is Software Architecture?</h2>
+
+<p><b>Software architecture</b> is about <b>how a system is structured</b>:</p>
+
+<ul><li> What parts it has</li>
+<li> How those parts talk to each other</li>
+<li> How easy it is to change, deploy, and scale</li></ul>
+
+<p>In <strong>DevOps</strong>, we care <em>less about what the software does</em> and more about:</p>
+
+<ul><li><b> How fast we can deploy changes</b></li>
+<li><b> How safely we can deploy changes</b></li></ul>
+
+ <h3>Example</h3>
+
+<ul><li> <b>Functional requirement</b>: “The system should process credit card payments.”</li>
+<li> <b>Non-functional requirement</b>: “The system should process 1,000 payments per second.”</li></ul>
+
+<p>👉 DevOps mainly influences <b>non-functional requirements</b>.</p>
+
+
+
+ <h2>2. DevOps Requirements on Architecture</h2>
+
+<p>DevOps and Continuous Delivery (CD) demand two things:</p>
+
+<ol><li><strong>Small changes should be deployable frequently</strong></li>
+<li><strong>Deployments should be safe and predictable</strong></li></ol>
+
+<p>👉 Ideally:</p>
+
+<ul><li> A developer fixes a small issue</li>
+<li> The fix goes to production quickly</li>
+<li> Rollbacks are <b>rare</b>, not normal</li></ul>
+
+
+
+ <h2>3. The Monolithic Architecture Problem</h2>
+
+ <h3>What is a Monolith?</h3>
+
+<p>A <strong>monolith</strong> is a system where:</p>
+
+<ul><li> Everything is bundled into <li>one big application</li></li>
+<li> Frontend, backend, static pages, and logic are all together</li></ul>
+
+<h3> Example Problem</h3>
+
+<p> You want to fix one <strong>spelling mistake</strong> on a website
+ But the whole application is <strong>packed as one big Java archive</strong></p>
+<p> So you must:</p>
+
+<ul>  <li> Rebuild everything</li>
+ <li>  Redeploy everything</li>
+  <li> Risk breaking the whole system</li></ul>
+ <h3>Why this is bad for DevOps?</h3>
+
+<ul><li> A tiny change feels <b>dangerous</b></li>
+<li> You must test and verify the <b>entire system</b></li>
+<li> High stress, slow deployments, higher risk</li></ul>
+
+<p><b>👉 Monoliths slow down Continuous Delivery</b></p>
+
+
+
+ <h2>4. Key Design Rule: Separation of Concerns</h2>
+
+<p>Proposed by <b>Edsger Dijkstra</b></p>
+
+ <p>Different responsibilities should be kept separate.</p>
+
+<h3> Related Concepts</h3>
+
+<ul><li><b>Cohesion</b> : Things inside a module should belong together</li>    
+<li><b>Coupling</b> : Modules should depend on each other as little as possible</li></ul>
+
+<p><strong>✔ High cohesion</strong></p>
+<p><strong>✔ Low coupling</strong></p>
+
+<p>👉 This makes systems:</p>
+
+<ul><li> Easier to understand</li>
+<li> Easier to change</li>
+<li> Easier to deploy</li>
+</ul>
+
+
+ <h2>5. Why the Monolith Fails This Rule</h2>
+
+<p>In the spelling-mistake example:</p>
+
+<ul><li> Frontend + backend + database were tightly bound</li>
+<li> No separation</li>
+<li> One small change affected everything</ul></li>
+<p>
+If the frontend was <strong>separately deployable</strong>, the change would be:</p>
+
+<ul><li> Clear</li>
+<li> Safe</li>
+<li> Fast</li></ul>
+
+
+
+<h1>The Twelve-Factor App</h1>
+
+<p>
+The <strong>Twelve-Factor App</strong> is a set of best practices for building modern, cloud-ready, 
+and DevOps-friendly applications. It was created by developers at <strong>Heroku</strong> after 
+observing patterns from building and deploying hundreds of real-world applications.
+</p>
+
+<p>
+Many of these principles are not new. They reflect ideas from classic software engineering wisdom, 
+such as <em>The Mythical Man-Month</em>, but adapted to modern environments involving cloud computing, 
+containers, and Continuous Delivery (CD).
+</p>
+
+<p>
+The goal of the Twelve-Factor methodology is to make applications:
+</p>
+
+<ul>
+    <li>Easy to deploy</li>
+    <li>Easy to scale</li>
+    <li>Reliable in production</li>
+    <li>Portable across environments</li>
+</ul>
+
+<hr>
+
+<div class="factor">
+<h2>Factor 1 – Codebase</h2>
+<h3>One source, many environments</h3>
+<p>
+An application should have <strong>one codebase</strong> tracked in a version control system 
+such as Git. This single codebase can be deployed to multiple environments such as development, 
+testing, staging, and production.
+</p>
+<p>
+Having multiple codebases for the same application leads to confusion, duplication, and errors.
+</p>
+<div class="example">
+Example: One Git repository deployed as dev, test, and prod with different configurations.
+</div>
+</div>
+
+<div class="factor">
+<h2>Factor 2 – Dependencies</h2>
+<h3>Clearly list what the app needs</h3>
+<p>
+All application dependencies should be <strong>explicitly declared</strong> and isolated. 
+The application must not rely on software being pre-installed on the system.
+</p>
+<p>
+This ensures that the application behaves the same way everywhere.
+</p>
+<div class="example">
+Example: Using Maven, npm, pip, or Docker to package dependencies.
+</div>
+</div>
+
+<div class="factor">
+<h2>Factor 3 – Configuration</h2>
+<h3>Keep settings outside code</h3>
+<p>
+Configuration should be stored <strong>outside the application code</strong>, usually in environment 
+variables or external configuration files.
+</p>
+<p>
+This allows the same application binary to be used across environments without modification.
+</p>
+<div class="example">
+Example: Database passwords stored as environment variables, not hard-coded.
+</div>
+</div>
+
+<div class="factor">
+<h2>Factor 4 – Backing Services</h2>
+<h3>Databases/services are replaceable</h3>
+<p>
+Backing services such as databases, message queues, or caches should be treated as 
+<strong>attached resources</strong> that can be easily replaced.
+</p>
+<p>
+The application should not assume a specific backing service instance.
+</p>
+<div class="example">
+Example: Switching from a local database to a cloud database by changing a URL.
+</div>
+</div>
+
+<div class="factor">
+<h2>Factor 5 – Build, Release, Run</h2>
+<h3>Don’t change code at runtime</h3>
+<p>
+The application lifecycle must be divided into three strictly separated stages:
+</p>
+<ul>
+    <li><strong>Build</strong>: Compile and package the code</li>
+    <li><strong>Release</strong>: Combine build with configuration</li>
+    <li><strong>Run</strong>: Execute the application</li>
+</ul>
+<p>
+Code must never be modified at runtime.
+</p>
+</div>
+
+<div class="factor">
+<h2>Factor 6 – Processes</h2>
+<h3>No user state inside app</h3>
+<p>
+Applications should run as <strong>stateless processes</strong>. Any data that needs to persist 
+must be stored in backing services such as databases.
+</p>
+<p>
+Statelessness enables easy scaling and recovery.
+</p>
+<div class="example">
+Example: User sessions stored in Redis instead of application memory.
+</div>
+</div>
+
+<div class="factor">
+<h2>Factor 7 – Port Binding</h2>
+<h3>App exposes itself via a port</h3>
+<p>
+Applications should expose their services by binding to a port, rather than relying on 
+external web servers.
+</p>
+<p>
+This makes applications self-contained and portable.
+</p>
+<div class="example">
+Example: A Spring Boot or Node.js app listening on port 8080.
+</div>
+</div>
+
+<div class="factor">
+<h2>Factor 8 – Concurrency</h2>
+<h3>Scale using multiple processes</h3>
+<p>
+Applications should scale by running multiple process instances rather than using complex 
+threading models.
+</p>
+<p>
+This approach is simpler and more reliable in distributed systems.
+</p>
+<div class="example">
+Example: Running multiple Docker containers behind a load balancer.
+</div>
+</div>
+
+<div class="factor">
+<h2>Factor 9 – Disposability</h2>
+<h3>Apps should start/stop quickly </h3>
+<p>
+Applications should start quickly and shut down gracefully. This improves system robustness 
+and enables fast scaling and recovery.
+</p>
+<p>
+Processes should be treated as disposable.
+</p>
+</div>
+
+<div class="factor">
+<h2>Factor 10 – Dev/Prod Parity</h2>
+<h3>Dev and prod should look alike</h3>
+<p>
+Development, testing, staging, and production environments should be as similar as possible.
+</p>
+<p>
+This reduces bugs that appear only in production.
+</p>
+<div class="example">
+Example: Using Docker locally and in production.
+</div>
+</div>
+
+<div class="factor">
+<h2>Factor 11 – Logs</h2>
+<h3>Logs are streams, not files</h3>
+<p>
+Logs should be treated as <strong>event streams</strong>. The application should simply write logs 
+to standard output.
+</p>
+<p>
+Log storage and analysis should be handled by the execution environment.
+</p>
+<div class="example">
+Example: Docker logs collected by ELK stack or cloud logging tools.
+</div>
+</div>
+
+<div class="factor">
+<h2>Factor 12 – Admin Processes</h2>
+<h3>Run admin jobs like normal apps</h3>
+<p>
+Administrative tasks such as database migrations or cleanup jobs should be run as 
+<strong>one-off processes</strong> using the same codebase and environment as the application.
+</p>
+<p>
+This ensures consistency and avoids version mismatch issues.
+</p>
+<div class="example">
+Example: Running a database migration script using the same Docker image.
+</div>
+</div>
+
+<h3>👉 All these help fast, safe deployments</h3>
+
+<h2>Conclusion</h2>
+<p>
+The Twelve-Factor App principles strongly support DevOps and Continuous Delivery by promoting 
+modularity, automation, portability, and reliability. Applications built following these 
+principles are easier to deploy, scale, monitor, and maintain.
+</p>
+
+<p>
+For official documentation, visit:
+<a href="https://12factor.net/" target="_blank">https://12factor.net/</a>
+</p>
+
+
+
+ <h2>7. Three-Tier Architecture</h2>
+
+<p>This splits the system into <b>three layers</b>:</p>
+
+<img src="images/ch3_1_3tire.png" alt="Three-Tier Architecture">
+
+<h3> 1️⃣ Presentation Tier</h3>
+
+<ul><li> UI layer</li>
+<li> Example: <strong>React / Angular</strong></li>
+<li> Handles what users see</li></ul>
+
+<h3> 2️⃣ Logic Tier</h3>
+<ul>
+<li> Business logic</li>
+<li> Example: <strong>Java, Python</strong></li>
+<li> Processes requests</li></ul>
+
+<h3> 3️⃣ Data Tier</h3>
+
+<ul><li> Database</li>
+<li> Example: <strong>PostgreSQL</strong></li></ul>
+
+ <h3>Why DevOps Likes This?</h3>
+
+<ul><li> Each layer <strong>can be deployed separately</strong></li>
+<li> Smaller, safer changes</li></ul>
+
+<p>⚠ But:</p>
+
+<ul><li> If layers are tightly coupled, it becomes <strong>a hidden monolith</strong></li></ul>
+
+
+
+<h2>8. Handling Database Migrations</h2>
+
+<p>Databases are different from application binaries because they store <b>both structure (schema)</b> and <b>data (state)</b>.
+</p>
+<p>While application code can usually be stopped, replaced, and restarted, a database <b>cannot be casually replaced</b> because it contains valuable and persistent data.
+</p>
+<h3>Key Points</h3>
+<ul>
+<li><b>Database = Structure + State</b></li>
+
+ <ul><li>Structure: tables, columns, constraints</li>
+  <li>State: actual business data (customers, orders, transactions)</li></ul>
+
+<li><strong>Schema changes = version changes</strong></li>
+
+
+<ul>  <li>Each schema modification creates a <strong>new database version</strong></li>
+  <li>Versions must be tracked carefully</li></ul>
+
+<li><strong>Database migration tools</strong></li>
+
+<ul>  <li>Used to manage schema evolution safely</li></ul>
+  <p>Common tools:</p>
+
+<ul><li>Liquibase (Java)</li>
+    <li>Flyway (Java)</li>
+    <li>Migratus (Clojure)</li>
+    <li>Alembic (Python)</li>
+    </ul>
+</ul>
+<h3>How Migration Tools Work (Common Pattern)</h3>
+
+<ol><li>A <b>metadata table</b> is added to track schema versions</li>
+<li>Schema changes are written as <b>versioned change sets</b></li>
+<li>Tool checks which changes are already applied</li>
+<li>Only <b>missing migrations</b> are executed</li></ol>
+
+<h3>Rolling Upgrades (Zero / Low Downtime)</h3>
+
+<ul><li>Used when downtime is unacceptable</li>
+<li>Upgrade database <b>incrementally</b></li>
+<li>Keep schema <b>backward compatible</b></li>
+<li>Upgrade application servers <b>one by one</b></li>
+<li>Remove old schema only after all servers are updated</li></ul>
+
+<h3>Liquibase Example (Hello World)</h3>
+
+<li>Changelog file defines ordered change sets</li>
+<li>Example:</li>
+<ul>
+  <li>ChangeSet 1 → create table
+  <li>ChangeSet 2 → add column</ul>
+<li>Integrated into build using Maven</li>
+<li>Supports XML, YAML, JSON, SQL</li>
+<li>Suitable for CI/CD pipelines
+</li>
+<h3>Key Takeaway</h3>
+
+<ul> <li><b>Database changes must be planned, versioned, and backward-compatible</b></li>
+<li> They cannot be treated like normal application updates.</li></ul>
+
+
+<h2>Why You Cannot Just Replace a Database Like an App Binary</h2>
+
+<h3>Simple Explanation</h3>
+
+<p>When you update an <strong>application binary</strong>:</p>
+
+<ul>
+  <li>You stop the application</li>
+  <li>Replace the old version with a new one</li>
+  <li>Start the application again</li>
+</ul>
+
+<p>The application usually works immediately because its <strong>state (data)</strong> is stored elsewhere, typically in a database.</p>
+
+<p><strong>A database is fundamentally different.</strong></p>
+
+<h3>1. Databases Contain State (Important Data)</h3>
+
+<p>An <strong>application binary</strong>:</p>
+<ul>
+  <li>Contains only code</li>
+  <li>Is stateless</li>
+</ul>
+
+<p>A <strong>database</strong>:</p>
+<ul>
+  <li>Contains <strong>years of business data</strong></li>
+  <li>Losing or corrupting it can destroy the business</li>
+</ul>
+
+<p>
+  👉 You <strong>cannot</strong> simply <em>“delete and redeploy”</em> a database.
+</p>
+
+
+<h3>2. Schema Changes Affect Existing Data</h3>
+
+<p>Changing a database schema:</p>
+<ul>
+  <li>Directly impacts stored data</li>
+  <li>May break existing applications</li>
+  <li>Often cannot be reversed easily</li>
+</ul>
+
+<p><strong>Example:</strong></p>
+<pre>
+name  &rarr;  first_name + last_name
+</pre>
+
+<p>If done incorrectly, data can become:</p>
+<ul>
+  <li>Lost</li>
+  <li>Misinterpreted</li>
+  <li>Inconsistent</li>
+</ul>
+
+
+---
+<h3>3. Databases Are Shared Resources</h3>
+
+<ul>
+  <li>Multiple services may depend on the same database</li>
+  <li>Updating the schema for one service can inadvertently break others</li>
+  <li>Careful coordination and backward/forward compatibility planning are required</li>
+</ul>
+
+<h3>4. Downtime Is Expensive</h3>
+
+<ul>
+  <li>Stopping a database means:</li>
+  <ul>
+    <li>Entire system outage</li>
+    <li>User impact</li>
+    <li>Revenue loss</li>
+  </ul>
+</ul>
+
+<p>Hence:</p>
+
+<ul>
+  <li>Rolling upgrades</li>
+  <li>Backward-compatible changes</li>
+  <li>Careful sequencing</li>
+</ul>
+
+<hr/>
+
+<h3>5. Rollback Is Hard</h3>
+
+<ul>
+  <li>Rolling back app code = easy</li>
+  <li>Rolling back database changes = risky or impossible</li>
+</ul>
+
+<p>Once data is migrated:</p>
+
+<ul>
+  <li>Old structure may no longer exist</li>
+  <li>Data transformations may not be reversible</li>
+</ul>
+
+<p><strong>
+An application binary is stateless and replaceable, but a database is stateful and persistent—therefore database upgrades must be carefully versioned, migrated, and coordinated rather than simply replaced.
+</strong></p>
+
+
+
+
+<h2>9. Microservices</h2>
+
+<h3>What are Microservices?</h3>
+
+<p>
+Microservices is an architectural style where an application is built as a collection of
+<strong>small, independent services</strong>. Each service focuses on a single business capability
+and runs as a separate process.
+</p>
+
+<ul>
+  <li>Each service has its own codebase and often its own database</li>
+  <li>Services communicate using lightweight protocols such as <strong>HTTP/JSON</strong></li>
+  <li>Each service can be developed, tested, deployed, and scaled independently</li>
+</ul>
+
+<h3>Why DevOps Loves Microservices</h3>
+
+<p>
+Microservices align well with DevOps principles because they reduce coupling and increase
+delivery speed.
+</p>
+
+<ul>
+  <li>
+    <strong>Faster deployments:</strong>  
+    Small services mean smaller code changes, enabling frequent and safer releases.
+  </li>
+  <li>
+    <strong>Smaller failures:</strong>  
+    A failure in one service usually does not bring down the entire system.
+  </li>
+  <li>
+    <strong>Easier rollback:</strong>  
+    Only the affected service needs to be rolled back instead of the whole application.
+  </li>
+</ul>
+
+<h3>⚠ Challenges of Microservices</h3>
+
+<p>
+While microservices offer flexibility, they also introduce operational complexity.
+</p>
+
+<ul>
+  <li>
+    <strong>More services → more failures possible:</strong>  
+    A distributed system has many moving parts, increasing the chances of network issues,
+    partial failures, and latency problems.
+  </li>
+  <li>
+    <strong>Needs monitoring and automation:</strong>  
+    Effective logging, monitoring, alerting, and automated deployment pipelines are essential
+    to manage and operate microservices reliably.
+  </li>
+</ul>
+
+<p>
+In practice, microservices succeed only when combined with strong DevOps practices such as
+CI/CD, containerization, orchestration, and observability.
+</p>
+
+
+
+
+ <h2>10. Conway’s Law (Very Important)</h2>
+
+<blockquote>
+  <p><strong>Software structure reflects team structure</strong></p>
+</blockquote>
+
+<p>
+Conway’s Law states that the way an organization is structured will inevitably be reflected
+in the software systems it builds. Communication paths between teams strongly influence
+system architecture.
+</p>
+
+<h3>Example</h3>
+
+<p>
+In a traditional organization, teams are often divided by function:
+</p>
+
+<ul>
+  <li>Database team</li>
+  <li>Backend team</li>
+  <li>Frontend team</li>
+</ul>
+
+<p>
+Because each team works in isolation and communicates through formal handoffs, the resulting
+software usually mirrors this separation, leading to a rigid <strong>three-tier architecture</strong>:
+</p>
+
+<ul>
+  <li>Presentation layer (Frontend)</li>
+  <li>Business logic layer (Backend)</li>
+  <li>Data layer (Database)</li>
+</ul>
+
+<p>
+While this structure is clear, it often causes:
+</p>
+
+<ul>
+  <li>Slow delivery due to inter-team dependencies</li>
+  <li>Blame shifting instead of shared responsibility</li>
+  <li>Difficult troubleshooting across layers</li>
+</ul>
+
+<h3>DevOps Goal</h3>
+
+<p>
+DevOps challenges this model by promoting <strong>cross-functional teams</strong> that can deliver
+features end-to-end without heavy coordination overhead.
+</p>
+
+<p>Each team owns:</p>
+
+<ul>
+  <li><strong>Code</strong> – design, development, and testing</li>
+  <li><strong>Deployment</strong> – CI/CD pipelines and releases</li>
+  <li><strong>Operations</strong> – monitoring, scaling, and incident response</li>
+</ul>
+
+<p>
+This ownership creates faster feedback loops, better accountability, and more resilient systems.
+</p>
+
+<p>
+👉 <strong>Microservices architecture</strong> fits this model well because each service can be owned,
+developed, deployed, and operated by a single team independently.
+</p>
+
+<p>
+<strong>In short:</strong> If you want loosely coupled, scalable systems, you must first build
+loosely coupled, well-communicating teams.
+</p>
+
+
+
+<h2>11. Service Compatibility (Tolerant Reader Pattern)</h2>
+
+<h3>Problem</h3>
+<p>
+In distributed systems, services are developed and deployed independently.
+Over time, requirements change and services must evolve by adding or modifying
+data fields. This creates a challenge when different versions of services
+need to communicate with each other.
+</p>
+
+<p>
+If a service consumer expects an exact data structure, even small changes
+in the response can cause failures and break compatibility.
+</p>
+
+<h3>Solution: Tolerant Reader Pattern</h3>
+<p>
+The <strong>Tolerant Reader Pattern</strong> solves this problem by making service
+consumers flexible in how they read data.
+</p>
+
+<ul>
+  <li>Consumers <strong>ignore unknown fields</strong> in incoming messages</li>
+  <li>Consumers only process the fields they actually need</li>
+</ul>
+
+<p>
+At the same time:
+</p>
+
+<ul>
+  <li>Producers can <strong>safely add new fields</strong> to responses</li>
+  <li>Older consumers continue to work without changes</li>
+</ul>
+
+<h3>Why This Matters</h3>
+<p>
+This approach enables:
+</p>
+
+<ul>
+  <li>Independent service evolution</li>
+  <li>Backward compatibility</li>
+  <li>Zero-downtime deployments</li>
+  <li>Reduced coordination between teams</li>
+</ul>
+
+<h3>Best Fit Technologies</h3>
+<p>
+This pattern works best with:
+</p>
+
+<ul>
+  <li><strong>REST + JSON</strong></li>
+</ul>
+
+<p>
+JSON is naturally flexible:
+</p>
+
+<ul>
+  <li>Extra fields can be added without breaking existing clients</li>
+  <li>Most JSON parsers ignore unknown attributes by default</li>
+</ul>
+
+<h3>SOAP Comparison</h3>
+<p>
+SOAP services are typically defined using strict schemas (WSDL and XSD).
+Any change in the message structure often requires:
+</p>
+
+<ul>
+  <li>Regenerating client code</li>
+  <li>Coordinated deployments</li>
+  <li>Versioned endpoints</li>
+</ul>
+
+<p>
+As a result, SOAP-based systems are:
+</p>
+
+<ul>
+  <li>Stricter</li>
+  <li>Slower to evolve</li>
+  <li>Less suitable for rapid, independent service changes</li>
+</ul>
+
+<p>
+<strong>In summary:</strong> The Tolerant Reader Pattern allows services to evolve
+safely by making consumers flexible, enabling faster development and
+more resilient distributed systems.
+</p>
+
+
+
+
+ <h2>12. Microservices and Databases</h2>
+
+Two options:
+
+<ol><li>Each service has its own database</li>
+
+<ul> <li>Better isolation</li>
+ <li>Easier independent deployment</li> </ul>
+
+<li>Shared database</li>
+
+ <ul><li>Easier data modeling</li>
+ <li>Harder to evolve safely</li>
+</ul>
+<p>👉 No single correct answer</p></ol>
+
+
+
+ <h2>13. DevOps, Architecture & Resilience</h2>
+
+<ol><p></p></ol>
+<ul>
+ <li>Speed</li>
+ <li>Flexibility</li> </ul>
+
+<p>But also Challenges:</p>
+
+<ul> <li>Monitoring</li>
+<li> Health-check APIs</li>
+<li> Load balancers</li>
+ <li>Automation</li> </ul>
+
+<p>Example:</p>
+
+<ul><li> If a service fails → remove it automatically</li></ul>
+
+
+
+ <h2>Big Picture Summary</h2>
+
+<p> DevOps changes architecture by:</p>
+
+<ul> <li>Encouraging modularity</li>
+<li> Avoiding monoliths</li>
+<li> Making systems easy to deploy</li>
+<li> Treating databases as versioned code</li>
+<li> Promoting microservices</li>
+ <li>Emphasizing monitoring and resilience</li> </ul>
+
+<ul><li>👉 Good architecture makes DevOps possible</li>
+<li>👉 Bad architecture makes DevOps painful</li> </ul>
+
+
