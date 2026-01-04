@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chapter 1 – Introduction to DevOps and Continuous Delivery</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.7;
+            margin: 40px;
+            color: #222;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        ul, ol {
+            margin-left: 25px;
+        }
+        blockquote {
+            border-left: 4px solid #3498db;
+            padding-left: 12px;
+            color: #555;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        hr {
+            margin: 30px 0;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Chapter 1 – Introduction to DevOps and Continuous Delivery</h1>
+
+<p>
+This chapter introduces <strong>DevOps</strong>, explains <strong>why it exists</strong>, and
+shows how it fits into the larger world of <strong>Agile software development</strong>.
+Before learning tools like Jenkins, Docker, or Kubernetes, it is important to
+understand the <strong>mindset behind DevOps</strong>.
+</p>
+
+<hr>
+
+<h2>1. What is DevOps?</h2>
+
+<p>
+<strong>DevOps</strong> is a way of working where
+<strong>developers (Dev)</strong> and
+<strong>operations teams (Ops)</strong> work together instead of separately.
+</p>
+
+<p>
+The word <strong>DevOps</strong> comes from:
+</p>
+
+<ul>
+    <li><strong>Dev</strong> – Development</li>
+    <li><strong>Ops</strong> – Operations</li>
+</ul>
+<img src="images/DevOps.webp" alt="DevOps Illustration" style="max-width:720px; height:auto; display:block;">
+
+<p>Earlier:</p>
+
+<p>Developers wrote code</p>
+
+<p>Operations teams deployed and managed servers</p>
+
+<p>They worked in separate silos</p>
+
+<p>DevOps says:</p>
+
+<blockquote>
+    Let us remove the wall between development and operations.
+</blockquote>
+
+
+<hr>
+
+<h2>2. Why Was DevOps Needed?</h2>
+
+<p>
+In many organizations:
+</p>
+
+<ul>
+    <li>Developers say: “It works on my machine.”</li>
+    <li>Operations say: “It breaks in production.”</li>
+</ul>
+
+<p><strong>This conflict leads:</strong></p>
+
+<ul><li>Delays</li>
+
+<li>Blame games</li>
+
+<li>Slow releases</li></ul>
+
+<p>DevOps was created to fix this problem by:</p>
+
+<ul><li>Improving communication</li>
+
+<li>Sharing responsibility</li>
+
+<li>Automating repetitive work</li></ul>
+
+<hr>
+
+<h2>3. History of DevOps</h2>
+
+<p>
+A developer named <strong>Patrick Debois</strong> noticed the growing gap between
+developers and operations teams.
+</p>
+
+<p>
+In 2009, a talk at the <b>O’Reilly Velocity Conference showed how Flickr</b>
+deployed software more than <strong>10 times a day</strong> by making Dev and Ops work together.
+</p>
+<img src="images/OreillyVelocity.jpg" alt="DevOps Velocity Illustration" style="max-width:720px; height:auto; display:block;">
+<p>
+Patrick later organized an event called <strong>DevOpsDays</strong> in Belgium.
+The idea became popular, and people started calling it simply <strong>DevOps</strong>.
+</p>
+<img src="images/DevOpsDays.jpg" alt="DevOpsDays Illustration" style="max-width:720px; height:auto; display:block;"> 
+<hr>
+
+<h2>4. DevOps and Agile</h2>
+
+<p>
+DevOps is closely connected to <strong>Agile development</strong>.
+The Agile Manifesto emphasizes:
+</p>
+
+<blockquote>
+    <strong>Individuals and interactions over processes and tools</strong>
+</blockquote>
+<img src="images/AgileManifesto.jpg" alt="AgileManifesto Illustration" style="max-width:720px; height:auto; display:block;"> 
+<p>
+DevOps follows this principle by focusing on people and collaboration
+instead of rigid processes.
+</p>
+
+<p><strong>💡 Reality check:</strong></p>
+<ul>
+<li>In large organizations, processes and tools often matter more than people</li>.
+<li>DevOps tries to <strong>reverse this thinking</strong>.</li>
+</ul>
+
+<hr>
+
+<h2>5. Breaking Walls Between Teams</h2>
+
+<p>
+In many companies:
+</p>
+
+<ul>
+    <li>Developers use one system for bugs</li>
+    <li>QA uses another system</li>
+    <li>Operations use a third system</li>
+</ul>
+<img src="images/Wall.png" alt="DevOps Anti-Pattern Image" style="max-width:720px; height:auto; display:block;"> 
+<p>A DevOps mindset says:</p>
+
+<blockquote> <strong>“These are all workflow problems. Why not use one shared system?”</strong></blockquote>
+<p>and encourages using shared systems.</p>
+<img src="images/noWalls.png" alt="DevOps Pattern Image" style="max-width:720px; height:auto; display:block;">
+<p>
+Benefits include:
+</p>
+
+<ul>
+    <li>Better communication</li>
+    <li>Faster delivery</li>
+    <li>Lower maintenance cost</li>
+</ul>
+
+<hr>
+
+<h2>6. Automation and Continuous Delivery</h2>
+<p>Another core goal of DevOps is <strong>automation</strong>.</p>
+<p>Why?</p>
+
+<ul>
+<li>Manual work is slow
+</li>
+<li>Manual work causes errors
+</li>
+<li>Automation saves time</li>
+</ul>
+
+<p>
+<strong>Continuous Delivery (CD)</strong> means:
+</p>
+
+<blockquote>
+    Code changes are always ready to be released safely and quickly.
+</blockquote>
+
+<p>Automation helps teams focus on:</p>
+
+<ul>
+<li>Creative work</li>
+
+<li>Problem solving</li>
+
+<li>Business value</li>
+</ul>
+
+<hr>
+
+<h2>7. How Fast is “Fast”?</h2>
+
+<p>
+DevOps focuses on speed, but speed must deliver value,But speed alone is useless.
+</p>
+
+<ul>
+    <li>Doing useless work faster has no value</li>
+    <li>Delivering business value faster is success</li>
+</ul>
+
+<p>Examples of good speed:</p>
+
+<ul><li>Quick feedback to product owners</li>
+
+<li>Frequent test deployments</li>
+
+<li>Short waiting times</li></ul>
+
+<p>
+A simple rule:
+</p>
+
+<blockquote>
+    <strong>If you are waiting too long, something is wrong.</strong>
+</blockquote>
+
+<p>
+Long build times, manual deployments, and waiting for approvals
+are very expensive for organizations.
+</p>
+
+
+<p>Waiting during:</p>
+
+<ul>
+<li>Long builds</li>
+<li>Manual deployments</li>
+
+<li>Approval chains</li>
+
+<ul><li> is very expensive for organizations.</li></ul></ul>
+
+<hr>
+
+<h2>8. The Agile Wheel of Wheels</h2>
+<img src="images/AgileWheel.webp" alt="Agile Wheel" style="max-width:720px; height:auto; display:block;">
+<p>
+Agile development operates in multiple cycles:
+</p>
+
+<ul>
+    <li><strong>Kanban</strong> – Daily or 24-hour cycles</li>
+    <li><strong>Scrum</strong> – 2–4 week sprints</li>
+    <li><strong>SAFe</strong> – Large program-level cycles</li>
+</ul>
+
+
+<p>DevOps must support all these cycles.</p>
+
+<p><strong>Why?</strong></p>
+<p>Because DevOps connects development, testing, and operations.</p>
+
+<p>Key benefit:</p>
+
+<blockquote><strong>Improvements in small cycles improve big cycles.</strong></blockquote>
+
+<hr>
+
+<h2>9. Beware the Cargo Cult Agile Fallacy</h2>
+
+<p>The term “<strong>cargo cult</strong>” means:</p>
+<blockquote><strong>
+Copying actions without understanding their purpose</strong></blockquote>
+<img src="images/cargocult.jpg" alt="A cargo cult Agile aeroplane" style="max-width:720px; height:auto; display:block;"> 
+<p>Examples:</p>
+
+<ul>
+<li>Having daily stand-ups but no real communication</li>
+
+<li>Installing DevOps tools but keeping team silos</li>
+
+
+</ul>
+<p>This is <strong>fake Agile</strong> and <strong>fake DevOps</strong>.</p>
+
+<p>
+Examples:
+</p>
+
+<p>✔ Real DevOps means:</p>
+
+<ul>
+<li>Continuous feedback</li>
+
+<li>Acting on retrospectives</li>
+
+<li>Solving root problems</li>
+</ul>
+
+<p>DevOps helps by <strong>breaking silos</strong> and <strong>encouraging cooperation</strong>.</p>
+<img src="images/BreakingSilos.jpg" alt="Breaking Silos Illustration" style="max-width:720px; height:auto; display:block;"> 
+<hr>
+
+<h2>10. DevOps and ITIL</h2>
+<img src="images/devops.png" 
+     alt="DevOps"
+     style="max-width:720px; height:auto; display:block;">
+<img src="images/itil.jpg" 
+     alt="ITIL"
+     style="max-width:720px; height:auto; display:block; margin-bottom:16px;">
+<p>ITIL is a framework used in large organizations to manage IT services.</p>
+
+<p>At first glance  ITIL and DevOps may appear <strong>opposite</strong>.</p>
+
+<ul><li><strong>ITIL</strong> → slow, controlled changes</li>
+
+<li><strong>DevOps</strong> → fast, frequent changes</li>
+</ul>
+
+<p>But in reality:</p>
+
+<ul><li>They can <strong>work together</strong></li></ul>
+
+<p><strong>Why?</strong></p>
+
+<ul><li>Large organizations often have monolithic legacy systems, 
+These need structured processes (ITIL)</li>
+
+<li>DevOps tools can <strong>automate</strong> and <strong>improve ITIL</strong> practices</li></ul>
+
+<p>Example:</p>
+
+<ul>
+<li>ITIL <strong>talks</strong> about configuration management</li>
+
+<li>DevOps also <strong>usesconfiguration management tools</strong> </li>
+</ul>
+
+<p>So, DevOps complements ITIL, not replaces it. In reality, they can work together:</p>
+
+
+<hr>
+
+<h2>11. Key Takeaways (Summary)</h2>
+
+<ul>
+    <li>DevOps connects people, processes, and tools</li>
+    <li>It emphasizes collaboration and automation</li>
+    <li>DevOps is rooted in Agile principles</li>
+    <li>Speed must deliver business value</li>
+    <li>DevOps works with Scrum, Kanban, SAFe, and ITIL</li>
+</ul>
+
+<p>
+In the next chapter, we will explore the
+<strong>technical systems used in DevOps and Continuous Delivery pipelines</strong>.
+</p>
+
+</body>
+</html>
