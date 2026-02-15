@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Source Code Management & Git Hosting – Presentation</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .slide {
+            background: white;
+            width: 80%;
+            margin: 40px auto;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+                h1{
+            color: #c0392b;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        ul {
+            margin-top: 10px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Slide 1 -->
+    <div class="slide">
+        <h1>Source Code Management</h1>
+        <p>
+            Everything in modern software development is <span class="highlight">code</span>, 
+            and organizations need a reliable system to store and manage it. 
+        </p>
+        <p>
+            Both <strong>developers</strong> and <strong>operations teams</strong> rely on 
+            a central storage location for their respective types of code.
+        </p>
+    </div>
+    
+    
+
+    <!-- Slide 2 -->
+    <div class="slide">
+        <h1>The Need for Source Code Control</h1>
+
+        <p>
+            Terence McKenna once said that <span class="highlight">“everything is code.”</span>  
+            While this may not be universally true, in the DevOps world, nearly 
+            everything <b>can</b> be represented in codified form:
+        </p>
+
+        <ul>
+            <li>The applications we build</li>
+            <li>The infrastructure that hosts our applications</li>
+            <li>The documentation describing the products</li>
+            <li>and configuration code.</li>
+            <li>Supports collaboration between development & operations.</li>
+            <li>Enables version control, branching, and rollback.</li>
+            <li>Foundation for CI/CD and DevOps workflows.</li>
+            
+        </ul>
+
+        <p>
+            Even hardware configurations and system behavior can be driven by software.
+        </p>
+
+        <p>
+            Because of this, the <span class="highlight">source code repository becomes the heart of the organization</span>.  
+            Almost everything created or configured passes through it during its life cycle.
+        </p>
+    </div>
+
+    <!-- Slide 3 -->
+    
+    <div class="slide">
+    <h1>History of Source Code Management</h1>
+    <p>In order to understand the central need for source code control, Let us have a brief look at the development history of source code management.</p>
+    <ul>
+        <li>Understanding SCM history helps identify required features that we ourselves might need.</li>
+        <li>Evolution shows how code collaboration and workflow needs grew over time.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Early Approach: Separate Archives</h2>
+    <ul>
+        <li>Old versions stored as separate archives.</li>
+        <li>Still used in free/open-source projects (tar archives).</li>
+        <li>Simple but limited—no version tracking or collaboration features.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Centralized SCM with Check-In / Check-Out</h2>
+    <ul>
+	<li>source code was managed in a centralized way, and each file was treated independently</li>
+	<li>Check-Out</li>
+	<ul>
+        <li>Files could be locked(Check-Out) by a developer for exclusive editing.</li>
+		<li>The system can lock the file so no one else can modify it at the same time.
+</li>
+        <li>
+This prevents conflicts because only one person can edit a locked file.
+</li>
+        <li>
+Other developers can still read the file, but they cannot write changes until it’s unlocked.</li>
+</ul>
+<li>Check-In</li>
+
+<p>When the developer is done, they check in the file.</p>
+
+<p>The system:</p>
+<ul>
+<li>records a new version,
+</li>
+        <li>
+unlocks the file,
+</li>
+        <li>
+updates the central repository.
+</li>
+</ul>
+        <li>Examples: Revision Control System (RCS), Source Code Control System (SCCS).</li>
+		<li>Prevents merge conflicts by avoiding concurrent edits.
+</li>
+        <li>
+Limited collaboration flexibility, because locking blocks parallel work.</li>
+        <li>Rare today</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Centralized with Merge-Before-Commit Systems</h2>
+    <ul>
+        <li>Developers must merge latest changes before committing.</li>
+        <li>Supports centralized workflows used by many organizations.</li>
+        <li>Examples: Concurrent Versions System (CVS), Subversion (SVN).</li>
+        <li>Subversion still widely used in enterprise environments.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Decentralized Systems</h2>
+    <ul>
+        <li>Each developer has a full local repository.</li>
+        <li>Enables flexible, concurrent, and faster workflows.</li>
+        <li>More power → more potential for mistakes (“powerful guns”).</li>
+        <li>Examples: Git, Mercurial, Bazaar.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>The Future of SCM</h2>
+    <ul>
+        <li>Git dominates today's decentralized SCM landscape.</li>
+        <li>Alternatives still exist and may challenge Git in the future.</li>
+        <li>SCM tools continue evolving as collaboration needs grow.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>Roles and Source Code</h1>
+    <ul>
+        <li>SCM is a natural meeting point for all DevOps roles.</li>
+        <li>Some roles adopt it easily; others need cultural change.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Developers</h2>
+    <ul>
+        <li>SCM is essential for coding, branching, merging, and collaboration. It's their bread and butter.</li>
+    </ul>
+
+    <h2>Operations</h2>
+    <ul>
+        <li>Store infrastructure as code: scripts, topology, server configs.</li>
+        <li>SCM helps manage versions of environments and deployments.</li>
+    </ul>
+
+    <h2>Quality Assurance</h2>
+    <ul>
+        <li>Automated tests stored as code (Selenium, JUnit, etc.).</li>
+        <li>Ensures consistent and repeatable testing.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Documentation Challenges</h2>
+    <ul>
+        <li>Many organizations employ a wiki solution, such as the wiki engine powering Wikipedia</li>
+		<li>Many organizations still use Word files, emails, shared drives.</li>
+        <li>Hard to find, inconsistent, From a DevOps viewpoint, this is regrettable.</li>
+    </ul>
+
+    <h2>Improving Documentation</h2>
+    <ul>
+        <li>Use wikis or markdown stored in SCM (GitLab/GitHub wikis).</li>
+        <li>Static site generators like Hugo can create clean documentation sites.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>Which source code management system?</h1>
+    <ul>
+        <li>Many SCM systems exist and continue to evolve.</li>
+        <li>Git is currently the dominant choice.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Why Git?</h2>
+    <ul>
+	<li>In the early 2000s, the Linux kernel project used a commercial version control system called <b>BitKeeper</b>.</li>
+        <li>However, in 2005, BitKeeper’s free-of-charge license for the Linux community was withdrawn after a disagreement between the BitKeeper company <b>BitMover, Inc.</b> and some open-source developers.</li>
+		<li>This meant the Linux project could no longer legally use BitKeeper for development.</li>
+		<li>This triggered Linus Torvalds to create a new version control system</li>
+        <li>Designed for complex Linux kernel workflows.</li>
+        <li>Powerful enough for most organizations.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>DVCS Advantages</h2>
+    <ul>
+        <li>Work offline efficiently anywhere.</li>
+        <li>Faster—no server needed for every operation.</li>
+        <li>Private work until ready to share.</li>
+        <li>Multiple remotes → no single point of failure.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Other Distributed Systems</h2>
+    <ul>
+        <li><strong>Bazaar (bzr):</strong> Backed by Canonical(company behind Ubuntu); supported by Launchpad.</li>
+        <li><strong>Mercurial:</strong> Used by Firefox, OpenJDK.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Git Complexity</h2>
+    <ul>
+        <li>Powerful but can be hard to understand.</li>
+        <li>Frontends and UI tools help simplify workflows.</li>
+        <li>Often a topic of debate among developers.</li>
+    </ul>
+</div>
+<div class="slide">
+    <h1>Source Code Management System Migrations</h1>
+  <ul>
+    <li>Organizations often move from one Source Code Management (SCM) system to another.</li>
+    <li>Migrations vary from simple to very complex.</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Keeping History — When It Matters</h2>
+  <ul>
+    <li>Some projects value full history (example: Emacs).</li>
+    <li>A well-structured commit history explains:</li>
+<ul>
+<li>why a change was made</li>
+
+<li>how a bug was fixed</li>
+
+<li>the reasoning behind design decisions</li>
+</ul>
+    <li>Preserving commit history requires time and effort.</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>When History Isn’t Critical</h2>
+
+  <p>Reconstructing every commit, branch, comment, and tag from a legacy SCM can require significant time and tooling, but provide very little practical benefit.</p>
+  <ul>
+    <li>Then organizations don’t do complete historical migration.</li>
+    <li>Old SCM can remain online for reference.</li>
+    <li>Common examples: VSS, ClearCase migrations.</li>
+    <li>Legacy systems like:</li>
+
+<ul><li>Microsoft Visual SourceSafe (VSS)</li>
+
+<li>IBM Rational ClearCase</li></ul>
+
+<li> are notoriously difficult to migrate cleanly to Git.</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Easy Migrations</h2>
+  <ul>
+    <li>Some systems migrate cleanly with full history.</li>
+    <li>Example: Subversion → Git is usually straightforward and easy.</li>
+    <li>In these cases, historic accuracy need not be sacrificed.</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Choosing a Branching Strategy</h2>
+  <ul>
+    <li>Branching strategy  is a convention, or <strong>a set of rules</strong>, that describes </li>
+    <ul>
+    <li>when branches are created, 
+    <li>how they are to be named, 
+    <li>what use branches should have, and so on.</ul>
+    <li>Important for team collaboration and smooth deployments.</li>
+    <li>Most source code management systems do not prescribe a particular branching strategy and neither does Git.</li>
+    <li>Git doesn’t enforce a strategy — <strong>teams decide what fits best</strong>.</li>
+    <li> The <strong>SCM</strong> simply gives you the <strong>base mechanics to perform branching</strong>.</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Feature Branches</h2>
+  <ul>
+    
+    <li>A <strong>feature branch</strong> is a branching strategy that is <strong>used to keep track of ongoing development regarding a particular feature, bug, and so on</strong></li>
+    <li>Cheap and easy to create in Git.</li>
+    <li>Keeps related changes together and organized.</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Git Flow — Popular Strategy</h2>
+  <p>There are many well-known branching strategies. Vincent Driessen formalized a branching strategy called <strong>Git flow</strong>, which has many good features.</p> 
+  <p>
+  <img src="images/ch4_1_gitbranching.png" 
+       alt="Git Flow Branching Diagram" 
+       style="max-width:100%; height:auto;">
+</p>
+
+  <ul>
+    <li>Includes <b>master, develop, feature, release, and hotfix</b> branches.</li>
+  </ul>
+  <h2>Git Flow — How Branches Are Used</h2>
+  <ul>
+    <li><b>master</b>: Finished, stable code; tagged releases.</li>
+    <li><b>develop</b>: Work for the next release.</li>
+    <li><b>feature branches</b>: New features; merged into develop.</li>
+    <li><b>hotfix branches</b>: Urgent production fixes; merged into master.</li>
+  </ul>
+  <p>Git flow is too complex, and, in those cases, it can be scaled down. There are many such scaled-down models available.</p>
+</div>
+
+<div class="slide">
+<p>Here are several well-known <strong>scaled-down alternatives to Git Flow</strong>—simpler branching models commonly used when Git Flow is considered too heavy or process-intensive:
+</p>
+<h3><strong>1. GitHub Flow</strong></h3>
+<ul>
+  <li>Single long-lived branch: <strong>main</strong></li>
+  <li>Short-lived feature branches</li>
+  <li>Continuous deployment friendliness</li>
+  <li>Very simple, great for web services</li>
+</ul>
+
+<h3><strong>2. GitLab Flow</strong></h3>
+<ul>
+  <li>GitHub Flow + optional environment branches (e.g., <code>staging</code>, <code>production</code>)</li>
+  <li>Flexible, used in CI/CD pipelines</li>
+  <li>Lightweight compared to Git Flow, but more structured than GitHub Flow</li>
+</ul>
+
+<h3><strong>3. Trunk-Based Development</strong></h3>
+<ul>
+  <li>One main branch (“trunk”)</li>
+  <li>Tiny branches or direct commits</li>
+  <li>Fast integration, used by high-velocity teams (Google, Meta)</li>
+  <li>Works well with feature flags</li>
+</ul>
+
+<h3><strong>4. Simple Two-Branch Model</strong></h3>
+<ul>
+  <li>Long-lived <strong>main</strong> (or <strong>master</strong>)</li>
+  <li>Long-lived <strong>develop</strong></li>
+  <li>Everything else is short-lived feature branches</li>
+  <li>Often used by small teams that still want some separation between “stable” and “working”</li>
+</ul>
+
+
+</div>
+
+
+
+<div class="slide">
+  <h2>Other Strategies- The Forking Pattern</h2>
+  <p>
+    The Forking Pattern is a branching/workflow model where each developer maintains their own full copy of the main repository. 
+    This "copy" is called a <b>fork</b>.
+  </p>
+  <h3>Workflow Overview</h3>
+  <p>Instead of pushing changes directly to a shared central repository, developers:</p>
+  <ul>
+    <li>Fork the main repository (create a personal copy on GitHub/GitLab)</li>
+    <li>Clone their fork to their local machine</li>
+    <li>Make changes in feature branches</li>
+    <li>Push changes to their own fork (not to the main repo)</li>
+    <li>Create a Pull Request (PR) or Merge Request (MR) to the central repository</li>
+    <li>A maintainer reviews and merges the changes</li>
+  </ul>
+  <ol>
+      <li>Mainly used in open-source or external subcontractor scenarios.</li>
+    <li>Not common for internal organizational development.</li>
+    </ol>
+</div>
+
+<div class="slide">
+  <h2>Branching Problem Areas</h2>
+  <p>When teams try to follow <strong>Continuous Delivery (CD)</strong>, they often want to use just <strong>one main branch (like master or main)</strong> and release everything from it. 
+ </p> <p>This keeps things simple:</p>
+
+<ul>
+<li>Only one branch goes to production
+
+<li>Testing is easier
+
+<li>Deployment pipelines stay clean</ul>
+
+<p><strong>Git Flow</strong> is one branching model that encourages this type of workflow.</p>
+</div>
+
+<div class="slide">
+  <p> <strong>Continuous Delivery</strong> (CD) practices and <strong>branching strategies</strong> can sometimes <strong>conflict</strong>.</p>
+  <p><strong>Fast development team</strong> - They <strong>keep adding new features</strong> and <strong>merging</strong> them into the <strong>main branch</strong>.</p>
+<p><strong>Slow production environment</strong> - company has strict approval processes, or deployments require downtime that you want to avoid</p>  
+<p>This creates a timing problem:</p>
+  <ul>
+<li>
+<strong>On the main branch:</strong></li>
+
+<p>There are new features being developed, tested, and merged — but they are not ready for customers yet.</p>
+
+<li><strong>In production:</strong></li>
+
+<p>You are running an older, stable version of the software.</p>
+
+<li><strong>Suddenly a bug appears in production.</strong></li>
+
+<p>You must fix it right now and release it quickly.</p>
+
+<li>But the main branch already contains changes you don’t want to release yet.</li>
+<li>If you deploy the main branch, you will accidentally release unfinished features.</li>
+
+    <li>Undesirable but common in real projects</li>
+  </ul>
+</div>
+
+<div class="slide">
+<p><strong>The core issue</strong></p>
+
+<p>You need to deliver:</p>
+
+<ul><strong><li>the bug fix,</li>
+
+<li>without releasing the new features.</li></strong></ul>
+
+<p>But because development is ahead of production, the <strong>main branch is no longer “safe” to deploy.</strong></p>
+<h2>Two Basic Solutions</h2>
+
+<p>When you need to fix a bug in production but the main branch has unfinished features, there are two common ways to handle it:</p>
+
+<h3>1. Bug Fix Branch</h3>
+<ul>
+  <li>Create a new branch(<strong>Hotfixes</strong>) from the version that’s currently running in production.</li>
+  <li>Apply the bug fix in that branch.</li>
+  <li>Test it there.</li>
+  <li>Deploy it from that branch.</li>
+</ul>
+
+<p><strong>Downside:</strong><br>
+You may need extra testing environments because your main testing setup is already busy testing new development work.</p>
+
+<h3>2. Feature Toggling</h3>
+<ul>
+  <li>Instead of creating a special branch, keep working on the main branch but turn off unfinished features using feature flags.</li>
+  <li>Fix the bug on the main branch.</li>
+  <li>Deploy the main branch.</li>
+  <li>New features stay hidden and inactive in production.</li>
+</ul>
+
+<p><strong>Advantage:</strong><br>
+Only one branch to test and deploy.</p>
+
+ 
+  <h3>Considerations for Choosing</h3>
+  <ul>
+    <li>Feature toggling works well for backward-compatible or entirely new features.</li>
+    <li>Complex toggling logic can complicate testing.</li>
+    <li>Bug fix branches complicate deployment and testing — where to test, version naming, etc.</li>
+    <li>Testing resources may be scarce, especially for complex apps or external services.</li>
+  </ul>
+</div>
+
+
+
+<div class="slide">
+    <h2>Artifact version naming</h2>
+    <ul>
+        <li>Versions must grow monotonically and be comparable,  and it should be easy to see which version is newer</li>
+        <li>Use consistent scheme across all artifacts.</li>
+        <p>This usually translates to a version number with three or four parts:</p>
+        <li>Common format: <b>major.minor.patch[.build]</b></li>
+        <ol>
+            <li><strong>Major:</strong> for breaking changes, which signal major changes in the code.</li>
+            <li><strong>Minor:</strong> for minor changes, which are backward API compatible</li>
+            <li><strong>Patch:</strong> is for bug fixes.</li>
+            <p>Optional</p>
+            <li><strong>Build:</strong> can be a build number</li>
+        </ol>
+    </ul>
+  <p>
+    It is convenient when every installable artifact has a proper 
+    <b>release number</b> and a corresponding <b>tag</b> in the source code
+    management system.
+  </p>
+  <p>
+    This ensures traceability — you always know exactly which code produced
+    the artifact.
+  </p> 
+   <img src="images/ch4_4s_versionnaming.png" 
+       alt="Version Naming example" 
+       style="max-width:100%; height:auto;"> 
+</div>
+
+
+<div class="slide">
+  <h2>Snapshot Releases (Example: Maven)</h2>
+  <p>
+    Some tools, such as <b>Maven</b>, support <b>snapshot versions</b>.
+    A snapshot is a version with a <i>“fuzzy”</i> last part that changes as
+    development continues.
+  </p>
+  <h3>Problems with Snapshot Artifacts</h3>
+  <ul>
+    <li><b>Drawback:</b> It is difficult to identify which source code version produced a snapshot.</li>
+    <li>Makes debugging broken installations more difficult.</li>
+    <li>Violates a key testing principle:
+      <br><b>The exact same binary that was tested must be deployed to production.</b></li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>The Testing Problem</h2>
+  <p>
+    With snapshots, teams test the snapshot build repeatedly until testing is done.
+    After that, they create a proper <b>release version</b>, which is then deployed.
+  </p>
+  <p>
+    But this release is <b>not the same binary</b> that was tested — creating risk.
+  </p>
+    <h3>Issues with Snapshots</h3>
+    <ul>
+        <li>Snapshots hide which code was built.</li>
+        <li>Not the same artifact tested → breaks CD best practices.</li>
+        <li>Use build numbers instead of snapshots.</li>
+    </ul>
+</div>
+
+<div class="slide">
+  <h2>Choosing a Git Client</h2>
+  <p>
+    One of the strengths of Git is that it does not mandate a specific client.
+    Many clients are available, all compatible with each other and built on
+    stable, well-tested Git core implementations.
+  </p>
+  <h3>Git Client Options</h3>
+  <p>Most modern development environments provide built-in Git support.</p>
+  <ul>
+    <li>IDE-integrated Git clients (VS Code, IntelliJ, Eclipse)</li>
+    <li>Standalone GUI tools(GitHub Desktop,Sourcetree)</li>
+    <li>Command-line Git client(Standard Git CLI,Git Bash,PowerShell with Git)</li>
+  </ul>
+  <p>
+    Since all options work well, developers can usually choose based on personal preference.
+  </p>
+</div>
+
+<div class="slide">
+  <h2>The Command-Line Client</h2>
+  <p>
+    The CLI Git client is widely preferred, especially for operations work.
+    It is efficient when working remotely through SSH and supports all Git features.
+  </p>
+
+    <h2>Helping New Users</h2>
+    <ul>
+        <li>Provide simple installation & usage instructions.</li>
+        <li>Use organization wiki for standard Git setup guides.</li>
+    </ul>
+</div>
+
+<div class="slide">
+  <h1>Setting Up a Basic Git Server</h1>
+  <p>
+    Setting up a simple Git server is straightforward and useful for learning.
+    Though it doesn’t scale well for large organizations, it provides a solid foundation
+    before moving to advanced Git hosting solutions.
+  </p>
+
+  <h3>What You Need</h3>
+  <ul>
+    <li>A client machine with two user accounts</li>
+    <li>Git and SSH installed</li>
+    <li>SSH public/private keys for both users (<code>ssh-keygen</code>)</li>
+    <li>A server running an SSH daemon</li>
+  </ul>
+  <p>
+    We simulate two users pushing to one central Git server.
+  </p>
+</div>
+
+<div class="slide">
+  <h2>Git Server User Setup</h2>
+  <p>
+    Create a dedicated Git server user.  
+    Add the two clients' public keys to:
+  </p>
+  <pre>~/.ssh/authorized_keys</pre>
+  <p>
+    This allows both client users to authenticate through SSH.
+  </p>
+</div>
+
+<div class="slide">
+  <h2>Creating a Bare Repository</h2>
+  <p>A bare repository has no working directory and is ideal for servers.</p>
+  <pre>
+cd /opt/git
+mkdir project.git
+cd project.git
+git init --bare
+  </pre>
+  <p>
+    After this, try cloning, committing changes, and pushing from your client machines.
+  </p>
+</div>
+
+<div class="slide">
+  <h2>Limitations of This Basic Setup</h2>
+  <ul>
+    <li>
+      <b>Does not scale well:</b> Managing many users and projects becomes time-consuming.
+    </li>
+    <li>
+      <b>Security complexity:</b> Managing roles and permissions requires manual setup.
+    </li>
+    <li>
+      <b>No fine-grained access control:</b> Git alone can’t restrict users to specific repos or branches.
+    </li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Why This Is Only a Starting Point</h2>
+  <p>
+    For a few users, this manual setup is acceptable.
+    But for organizations with many developers, automated and secure platforms are necessary.
+  </p>
+  <p>
+    Later, tools like GitHub Enterprise, GitLab, Gitea, or Bitbucket simplify:
+  </p>
+  <ul>
+    <li>User management</li>
+    <li>Access control</li>
+    <li>Repository creation</li>
+    <li>Permissions and audit logs</li>
+  </ul>
+</div>
+
+
+<div class="slide">
+  <h1>Shared Authentication</h1>
+  <p>In an organization, many services (Git server, file servers, internal apps, VPN, etc.) need to verify who you are when you try to log in.
+</p><p>
+Instead of each service having its own separate list of usernames and passwords, organizations prefer to have one central system that stores and manages all user accounts.</p>
+  <p>
+    A common solution is <strong>LDAP (Lightweight Directory Access Protocol)</strong>.
+    It simplifies identity management across multiple systems.
+  </p>
+</div>
+
+<div class="slide">
+  <h2>Why Central Authentication?</h2>
+  <ul>
+    <li>Single source of truth for user accounts</li>
+    <li>Consistent access control across servers</li>
+    <li>Simplifies onboarding/offboarding of employees</li>
+    <li>Reduces duplication of credentials</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Using LDAP for Authentication</h2>
+  <p>
+    It is assumed that most organizations already have an LDAP-based authentication server.
+    If not, setting up a test server is relatively simple and useful for experimentation.
+  </p>
+
+  <h3>Recommended Test Setup</h3>
+  <p>A practical combination for testing purposes:</p>
+  <ul>
+    <li><strong>389 Directory Server</strong> – open-source LDAP server</li>
+    <li><strong>phpLDAPadmin</strong> – web-based UI for managing LDAP entries</li>
+  </ul>
+  <p>
+    These tools allow quick setup, user creation, and management for DevOps experiments.
+  </p>
+</div>
+
+<div class="slide">
+  <h2>Why Use a Test LDAP Server?</h2>
+  <ul>
+    <li>Allows consistent authentication across multiple tools</li>
+    <li>Useful for practice and learning DevOps workflows</li>
+    <li>Ensures all upcoming servers in this book use the same user directory</li>
+    <li>Safe environment for experimentation without affecting production</li>
+  </ul>
+  <p>
+    Setting up a test LDAP server provides a unified authentication base
+    for all systems you configure. This mirrors real organizational environments
+    and prepares you for practical DevOps infrastructure setups.
+  </p>
+</div>
+
+
+<div class="slide">
+  <h1>Hosted Git Servers</h1>
+  <p>
+    Some organizations, such as government or financial institutions, cannot allow
+    their code to be stored outside their premises due to legal or security concerns.
+  </p>
+  <p>
+    Others freely use hosted platforms like <strong>GitHub</strong> or <strong>GitLab</strong>
+    which provide private repositories and convenient Git tooling.
+  </p>
+</div>
+
+<div class="slide">
+  <h2>Why Use Hosted Git Services?</h2>
+  <ul>
+    <li>No need to maintain your own server</li>
+    <li>Fast setup and onboarding and Free accounts available</li>
+  </ul>
+  <p>
+    GitLab can also be installed <strong>on-premise</strong> if local hosting is required.
+  </p>
+</div>
+
+<div class="slide">
+  <h2>Key Features Offered by GitHub & GitLab</h2>
+  <ul>
+    <li>Web interface for browsing repositories</li>
+    <li>Built-in wiki for documentation</li>
+    <li>Integrated issue tracker</li>
+    <li>Commit history visualization</li>
+    <li>Branch visualization</li>
+    <li>Pull/Merge request workflow</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Integration Considerations</h2>
+  <p>
+    While GitHub and GitLab provide many tools, organizations may already have:
+  </p>
+  <ul>
+    <li>An internal wiki</li>
+    <li>A documentation system</li>
+    <li>An issue tracking system</li>
+  </ul>
+  <p>
+    In such cases, only the Git-related features may be used.
+  </p>
+</div>
+
+<div class="slide">
+  <h2>Large Binary Files in Git</h2>
+  <p>
+    Git was not originally designed to store large binary files such as images, videos, or audio.
+    Adding such files directly makes Git operations slow and reduces efficiency.
+  </p>
+</div>
+
+<div class="slide">
+  <h2>Why This Is a Problem?</h2>
+  <ul>
+    <li>Git stores full copies of binaries for each version</li>
+    <li>Repository size grows rapidly</li>
+    <li>Clone, pull, and fetch operations become sluggish</li>
+    <li>Breaks Git’s core advantage: speed</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Why Not Use a CMS?</h2>
+  <p>Media files are often handled by CMSes, but CMS systems have drawbacks:</p>
+  <ul>
+    <li>Poor or missing scripting/automation support</li>
+    <li>Not ideal for DevOps workflows</li>
+    <li>Harder to integrate with CI/CD</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Solutions for Large Files</h2>
+  <ul>
+    <li><strong>Git LFS</strong> – supported by GitHub & GitLab, Easiest to set up, good for most teams</li>
+    <li><strong>git-annex</strong> – supported by GitLab Enterprise Edition, More flexible & powerful, but harder to configure</li>
+  </ul>
+  <p>
+    Both are Git extensions designed to handle large media files more efficiently.
+  </p>
+</div>
+
+<div class="slide">
+  <h2>Key Takeaway</h2>
+  <p>
+    Large binary versioning is still a pain point in Git.  
+    Git LFS is the easiest approach, while git-annex provides deeper flexibility for advanced needs.
+  </p>
+</div>
+
+
+<div class="slide">
+  <h2>Trying Out Different Git Server Implementations</h2>
+  <p>
+    Git’s distributed architecture allows you to experiment with multiple Git servers
+    without disrupting your workflow.
+  </p>
+</div>
+
+<div class="slide">
+  <h2>Why Experiment with Git Servers?</h2>
+  <ul>
+    <li>Different servers offer different features & integrations</li>
+    <li>Helps identify which solution best fits organizational needs</li>
+    <li>Useful for testing CI/CD tools, permissions, workflows, and UI</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Client-Side Setup Stays the Same</h2>
+  <p>
+    Regardless of the server used, the client experience remains consistent:
+  </p>
+  <ul>
+    <li>Same Git commands (clone, pull, push, fetch)</li>
+    <li>Same local repository structure</li>
+    <li>Same SSH/HTTPS authentication methods</li>
+  </ul>
+</div>
+
+<div class="slide">
+  <h2>Multiple Servers in Parallel</h2>
+  <p>
+    Git makes it easy to connect to multiple servers simultaneously.
+  </p>
+  <ul>
+    <li>Projects can use different servers at the same time</li>
+    <li>Developers can evaluate multiple hosting options</li>
+    <li>Git supports multiple remotes in a single repository</li>
+  </ul>
+  <pre><code>git remote add gitlab   &lt;url&gt;
+git remote add github   &lt;url&gt;</code></pre>
+</div>
+
+<div class="slide">
+  <h2>Key Takeaway</h2>
+  <p>
+    Git’s flexibility allows organizations to explore and compare different Git
+    server solutions with minimal disruption. The client-side workflow remains simple
+    and consistent across all server types.
+  </p>
+</div>
+
+<section class="slide">
+    <h1>Gerrit – Code Review for Git</h1>
+    <p><strong>Gerrit</strong> is a Git-based code review tool used when teams need strict workflow control.</p>
+    <ul>
+        <li>Useful for reviewing sensitive or critical infrastructure code.</li>
+        <li>Allows approvals by senior developers or authorized reviewers.</li>
+        <li>Encourages high-quality code through structured reviews.</li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h2>Why Gerrit?</h2>
+    <ul>
+        <li>Fine-grained access control.</li>
+        <li>Mandatory reviews for sensitive code.</li>
+        <li>Better clarity and quality via controlled merges.</li>
+        <li>Useful when teams feel nervous about direct commits to infrastructure repositories.</li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h2>Running Gerrit with Docker</h2>
+    <p>Quick method to try Gerrit locally:</p>
+    <pre>
+docker run -d -p 8080:8080 -p 29418:29418 openfrontier/gerrit
+    </pre>
+    <p>Open Gerrit UI:</p>
+    <p><code>http://localhost:8080</code></p>
+</section>
+
+<section class="slide">
+    <h2>Installing git-review</h2>
+    <p>Helper tool used instead of <code>git push</code> for Gerrit:</p>
+    <pre>
+sudo dnf install git-review
+    </pre>
+    <p>Allows pushing changes to Gerrit for review.</p>
+</section>
+
+<section class="slide">
+    <h2>The Value of Clean Git History</h2>
+    <p>When collaborating, clear history improves communication.</p>
+    <ul>
+        <li>Remove unnecessary commits.</li>
+        <li>Squash small commits into one.</li>
+        <li>Use rebasing to maintain clean linear history.</li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h2>Preparing Changes for Review</h2>
+    <p>1. Rebase on latest server version:</p>
+    <pre>git pull --rebase origin master</pre>
+
+    <p>2. Squash or reorder commits:</p>
+    <pre>git rebase -i origin/master</pre>
+
+    <p>Your final commit should be clean and easy to review.</p>
+</section>
+
+<section class="slide">
+    <h2>Gerrit Review Process</h2>
+    <ol>
+        <li>Developer pushes change using <code>git-review</code>.</li>
+        <li>Reviewer opens Gerrit web UI.</li>
+        <li>Reviewer reads diff, adds comments.</li>
+        <li>Reviewer approves & submits change.</li>
+        <li>Gerrit merges into <code>master</code>.</li>
+    </ol>
+</section>
+
+<section class="slide">
+    <h2>Is Gerrit Worth It?</h2>
+    <ul>
+        <li>✔ Great for sensitive environments.</li>
+        <li>✔ Ensures only reviewed code is merged.</li>
+        <li>✔ Useful when teams must gatekeep critical systems.</li>
+        <li>✘ Avoid if your team only wants reviews “just because”.</li>
+        <li>✘ Better to remove bad practices (like passwords in repos) than hide code.</li>
+    </ul>
+</section>
+
+<section class="slide">
+    <h2>Conclusion</h2>
+    <p>Gerrit is best when:</p>
+    <ul>
+        <li>You need strict, enforced code reviews.</li>
+        <li>Quality and safety of code changes are top priority.</li>
+        <li>A central authority must approve every commit.</li>
+    </ul>
+</section>
+
+<!-- Slide 1 -->
+<section class="slide">
+    <h1>🔄 The Pull Request Model</h1>
+    <p>The pull request (PR) model is a workflow used to manage code changes through review and approval before merging into the main branch.</p>
+</section>
+
+<!-- Slide 2 -->
+<section class="slide">
+    <h2>💡 What Is a Pull Request?</h2>
+    <ul>
+        <li>A developer forks/clones the main repository.</li>
+        <li>They make changes in their personal copy or feature branch.</li>
+        <li>They submit a <strong>pull request</strong> asking the repository owner to merge their changes.</li>
+        <li>The repository maintainers review, discuss, request changes, or approve the PR.</li>
+    </ul>
+</section>
+
+<!-- Slide 3 -->
+<section class="slide">
+    <h2>🔒 Why Pull Requests?</h2>
+    <ul>
+        <li>Repository owners maintain full control of what gets merged.</li>
+        <li>External contributors cannot push directly to the main repository.</li>
+        <li>Clear review process encourages collaboration and code quality.</li>
+        <li>Each change is documented with comments, commits, and discussions.</li>
+    </ul>
+</section>
+
+<!-- Slide 4 -->
+<section class="slide">
+    <h2>🎯 Advantages of the PR Model</h2>
+    <ul>
+        <li>Easy for developers to understand.</li>
+        <li>Familiar workflow used widely in open-source GitHub projects.</li>
+        <li>Supports discussions, inline comments, and automated checks.</li>
+        <li>Allows controlled contribution from external developers.</li>
+    </ul>
+</section>
+
+<!-- Slide 5 -->
+<section class="slide">
+    <h2>🏗 Requirements for Pull Request Workflow</h2>
+    <p>To use the pull request model locally (inside an organization), you need platforms that support the PR workflow:</p>
+    <ul>
+        <li><strong>GitHub</strong> (Hosted or GitHub Enterprise)</li>
+        <li><strong>GitLab</strong> (Self-hosted or Cloud)</li>
+        <li><strong>Gitea</strong> or <strong>Bitbucket Server</strong> (optional alternatives)</li>
+    </ul>
+</section>
+
+<!-- Slide 6 -->
+<section class="slide">
+    <h2>📌 Summary</h2>
+    <ul>
+        <li>PR model allows safe, controlled merging of changes.</li>
+        <li>Ideal for open-source and large distributed teams.</li>
+        <li>Encourages high-quality code through review workflows.</li>
+        <li>Requires Git hosting software with PR capabilities.</li>
+    </ul>
+</section>
+
+
+
+<div class="slide">
+    <h1>🚀 GitLab Overview</h1>
+    <p>GitLab is a powerful platform built on top of Git, offering code hosting, CI/CD, issue tracking, visualization, and DevOps automation.</p>
+</div>
+
+<div class="slide">
+    <h2>⚙️ Installation Complexity</h2>
+    <p>GitLab is a large Ruby-based system with many dependencies, so installing it manually can be difficult.</p>
+    <p>Docker Compose simplifies this process dramatically.</p>
+</div>
+
+<div class="slide">
+    <h2>📦 Installing GitLab with Docker Compose</h2>
+    <pre>
+mkdir gitlab
+cd gitlab
+wget https://raw.githubusercontent.com/sameersbn/docker-gitlab/master/docker-compose.yml
+docker-compose up
+    </pre>
+    <p>The <code>docker-compose</code> command reads the YAML file and automatically starts all required services.</p>
+</div>
+
+<div class="slide">
+    <h2>🧱 Components Started</h2>
+    <p>Docker Compose starts three containers:</p>
+    <ul>
+        <li><strong>gitlab1</strong> – Ruby web app + Git backend</li>
+        <li><strong>postgresql1</strong> – Database for GitLab</li>
+        <li><strong>redis1</strong> – Key-value store for caching & queues</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>📂 Data Volumes</h2>
+    <p>All GitLab data is stored under:</p>
+    <p><code>/srv/docker/gitlab</code></p>
+    <p>This keeps application data persistent.</p>
+</div>
+
+<div class="slide">
+    <h2>🔐 Logging In</h2>
+    <p>Default login credentials (may change over time):</p>
+    <ul>
+        <li><strong>Username:</strong> root</li>
+        <li><strong>Password:</strong> 5iveL!fe</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>📁 Try Importing a Project</h2>
+    <ul>
+        <li>Import from GitHub</li>
+        <li>Import a private/local repository</li>
+        <li>Explore visualization of commits, branches, and merge requests</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>⭐ GitLab’s Most Valuable Features</h2>
+    <p>While GitLab has many features, two solve major DevOps bottlenecks:</p>
+    <ul>
+        <li><strong>SSH key management</strong> – Easy user authentication</li>
+        <li><strong>Creating new repositories</strong> – Fast and streamlined</li>
+    </ul>
+    <p>These contribute significantly to removing workflow slowdowns.</p>
+</div>
+
+<div class="slide">
+    <h2>📊 Visualization Features</h2>
+    <p>GitLab provides:</p>
+    <ul>
+        <li>Commit history graphs</li>
+        <li>Branch visualization</li>
+        <li>Inline merge request discussions</li>
+    </ul>
+    <p>Although useful, developers may still prefer Git client-side visual tools.</p>
+</div>
+
+<div class="slide">
+    <h2>🎯 Summary</h2>
+    <ul>
+        <li>GitLab adds significant DevOps automation on top of Git.</li>
+        <li>Docker Compose makes installation much easier.</li>
+        <li>Core strengths: repository creation & SSH key management.</li>
+        <li>Visualization is helpful but often secondary.</li>
+    </ul>
+</div>
+
+
+<div class="slide">
+    <h1>📘 Chapter Summary</h1>
+    <p>This chapter explored essential decisions involved in managing source code within a DevOps workflow.</p>
+</div>
+
+<div class="slide">
+    <h2>📁 Source Code Management Options</h2>
+    <ul>
+        <li>Reviewed different Git server implementations</li>
+        <li>Explored hosted solutions such as GitHub & GitLab</li>
+        <li>Compared lightweight and advanced Git setups</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>🌿 Branching & Workflow Decisions</h2>
+    <ul>
+        <li>Discussed branching strategies and their trade-offs</li>
+        <li>Examined the pull request model and code review workflows</li>
+        <li>Understood the importance of clean commit history</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>🔢 Version Numbering</h2>
+    <ul>
+        <li>Snapshot versions vs. real release versions</li>
+        <li>Why reproducible builds and tagged releases matter</li>
+        <li>Build numbers as a safer alternative to snapshots</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>🧭 Key Takeaways</h2>
+    <ul>
+        <li>Git workflows must balance speed, safety, and clarity</li>
+        <li>Infrastructure choices should match organizational needs</li>
+        <li>A clear strategy avoids bottlenecks and confusion</li>
+    </ul>
+</div>
+
+</body>
+</html>
