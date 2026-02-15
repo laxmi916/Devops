@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chapter 5s - Building the Code</title>
+    <style>
+        body { font-family: Times new roman, sans-serif; margin: 0; padding: 0; font-size: 18px}
+        section, div { padding: 40px;}
+        h1 { color: hsl(0, 82%, 51%); }
+        h2, h3 { color: #1a73e8; }
+        
+        .slide { border-bottom: 2px solid #ccc; }
+        section {
+            padding: 40px;
+            min-height: auto; /* instead of 100vh */
+        }
+        
+              pre, .code {
+    color: blue; 
+      background-color: #f4f4f4;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      overflow-x: auto;
+  }
+
+  code {
+      color: blue; 
+      font-family: monospace;
+      font-size: 1.1em;
+  }
+  
+    img {
+    max-width: 1024px;
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* --------------------
+   Responsive Images
+--------------------- */
+img {
+  max-width: 1024px;   /* Never exceed 1024px on desktop */
+  width: 100%;         /* But scale down on smaller screens */
+  height: auto;
+  display: block;
+  margin: 16px auto;
+  border-radius: 6px;  /* Slight rounding for clean look */
+}
+
+    </style>
+</head>
+<body>
+
+<!-- Slide 1 -->
+<section class="slide">
+    <h1>Chapter 5 – Building the Code</h1>
+    <p>You need a system to build your code, and you need somewhere to build it.</p>
+    <p>This chapter explores <b>build systems, validation tools, and artifact generation</b>.</p>
+</section>
+
+<!-- Slide 2 -->
+<section class="slide">
+    <h2>Topics Covered</h2>
+    <ul>
+        <li>Why do we build code?</li>
+        <li>The many faces of build systems</li>
+        <li>The Jenkins build server (and alternatives)</li>
+        <li>Managing build dependencies</li>
+        <li>Collating quality measures</li>
+        <li>Taking build errors seriously</li>
+    </ul>
+</section>
+
+<!-- Slide 3 -->
+<section class="slide">
+    <h1>Why Do We Build Code?</h1>
+    <p>Building code transforms source code from one form to another for execution or deployment.</p>
+
+    <h2>What Happens During a Build?</h2>
+    <ul>
+        <li><strong>Compilation</strong> – converting source into native or VM bytecode.</li>
+        <li><strong>Linting</strong> – checking for syntax issues and suspicious patterns.</li>
+        <li><strong>Unit Testing</strong> – verifying code through controlled test execution.</li>
+        <li><strong>Artifact Generation</strong> – creating deployable packages.</li>
+    </ul>
+</section>
+
+<!-- Slide 5 -->
+<section class="slide">
+    <h2>Linting – Quick Explanation</h2>
+    <p>The term <strong>linting</strong> comes from the Unix tool <em>lint</em>, created to find bugs that compilers miss.</p>
+
+    <h2>Note on Interpreted Languages</h2>
+    <p>These languages may not require compilation but still benefit from:</p>
+    <ul>
+        <li>Code quality checks</li>
+        <li>Static analysis</li>
+        <li>Unit tests</li>
+    </ul>
+</section>
+
+<!-- Slide: Title -->
+<section class="slide">
+    <h1>The Many Faces of Build Systems</h1>
+    <p>There are many build systems that have evolved over the history of software development. Sometimes it may feel as if there are more build systems than programming languages.</p>
+</section>
+
+<!-- Slide: List of Build Systems -->
+<section class="slide">
+    <h2>Examples of Build Systems</h2>
+    <ul>
+        <li><strong>Java:</strong> Maven, Gradle, Ant</li>
+        <li><strong>C / C++:</strong> Make (many flavors)</li>
+        <li><strong>Clojure (JVM):</strong> Leiningen, Boot, Maven</li>
+        <li><strong>JavaScript:</strong> Grunt</li>
+        <li><strong>Scala:</strong> sbt</li>
+        <li><strong>Ruby:</strong> Rake</li>
+        <li><strong>Shell:</strong> All kinds of custom scripts</li>
+    </ul>
+</section>
+
+<!-- Slide: Build System Complexity -->
+<section class="slide">
+    <h2>Build System Complexity</h2>
+    <p>Depending on your organization and products, you may encounter many different build tools. Some organizations even create their own.</p>
+    <p>Attempts to standardize build tools often conflict with the reality that tools exist for specific reasons:</p>
+    <ul>
+        <li>JavaScript builds are easier with Grunt than with Maven or Make.</li>
+        <li>C builds are inefficient when using Maven.</li>
+        <li>Each build tool generally suits its ecosystem best.</li>
+    </ul>
+    <p>Different tools exist because they solve different problems. One tool cannot work efficiently for every language.</p>
+</section>
+
+<!-- Slide: Standardization -->
+<section class="slide">
+    <h2>Standardization in Organizations</h2>
+    <p>Organizations typically standardize on one ecosystem (e.g., Java & Maven, Ruby & Rake). Additional build systems appear for native or third-party components.</p>
+    <p>We cannot assume:</p>
+    <ul>
+        <li>Only one build system exists.</li>
+        <li>Only one programming language is used.</li>
+    </ul>
+    <p>Companies often prefer <strong>one main tool</strong> for consistency, but they still end up using <strong>others for special cases</strong>.</p>
+    <p>A company using <strong>Java</strong> might standardize on <strong>Maven</strong>, but still use <strong>Make</strong> for <strong>third-party C libraries</strong>.</p>
+</section>
+
+<!-- Slide: A Useful Rule -->
+<section class="slide">
+    <h2>A Useful Rule</h2>
+    <p><strong>It should be possible for a developer to check out the code and build it locally with minimal surprises.</strong></p>
+    <p>This implies:</p>
+    <ul>
+        <li>Standardizing the revision control system.</li>
+        <li>Providing a single interface to start builds locally.</li>
+    </ul>
+
+    <h2>Supporting Multiple Build Systems</h2>
+    <p>If multiple build systems exist, <strong>one can be wrapped inside another</strong>. This hides complexity and allows consistent developer workflows.</p>
+    <p>Example:</p>
+    <p><pre><code>mvn clean install</code> </pre>
+        can trigger internal builds written in other tools.</p>
+</section>
+
+<!-- Slide: Example Integration -->
+<section class="slide">
+    <h2>Example: Maven + NSIS</h2>
+    <p>To build a Java desktop installer using <strong>Nullsoft Scriptable Install System (NSIS)</strong> Windows installation system:</p>
+    <ul>
+        <li>Maven builds Java components and produces artifacts.</li>
+        <li>Once ready, Maven calls NSIS to build a Windows installer executable.</li>
+    </ul>
+    <p>While Java desktop apps are no longer fashionable, they remain popular in some domains.</p>
+</section>
+
+<!-- Slide: Title -->
+<section class="slide">
+    <h1>The Jenkins Build Server</h1>
+    <p>A <strong>build server </strong><strong>automatically builds software</strong> based on various <strong>triggers</strong>. <strong>Jenkins</strong> is one of the most popular build servers available.</p>
+
+    <h2>Jenkins Background</h2>
+    <p>Jenkins began as a <strong>fork of the Hudson build server</strong>. Kohsuke Kawaguchi, the main Hudson contributor, <strong>started Jenkins after Oracle acquired Hudson in 2010</strong>.</p>
+    <p>Today, <strong>Jenkins is the more widely used and active project</strong>.</p>
+</section>
+
+<!-- Slide: What Jenkins Can Build -->
+<section class="slide">
+    <h2>What Jenkins Can Build</h2>
+    <p>Although Jenkins has strong support for Java projects, it can build virtually any kind of software:</p>
+    <ul>
+        <li>Java</li>
+        <li>JavaScript</li>
+        <li>C / C++</li>
+        <li>Python</li>
+        <li>Go</li>
+        <li>Custom scripts</li>
+    </ul>
+</section>
+
+<!-- Slide: Installing Jenkins (Ubuntu) -->
+<section class="slide">
+    <h2>Installing Jenkins on Ubuntu</h2>
+    <p>Setting up Jenkins on Ubuntu is straightforward. Install Jenkins using apt:</p>
+    <pre><code>sudo apt update
+sudo apt install openjdk-17-jre
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+sudo apt update
+sudo apt install jenkins</code></pre>
+</section>
+
+<!-- Slide: Starting Jenkins -->
+<section class="slide">
+    <h2>Starting Jenkins</h2>
+    <p>Jenkins runs as a system service on Ubuntu:</p>
+    <pre><code>
+sudo systemctl start jenkins
+sudo systemctl enable jenkins
+    </code></pre>
+</section>
+
+<!-- Slide: Jenkins Web Interface -->
+<section class="slide">
+    <h2>Accessing Jenkins</h2>
+    <p>Once Jenkins is running, you can access the web interface at:</p>
+    <p><strong>http://localhost:8080</strong></p>
+    <p><img src="images/ch5_1_jenkins.png" alt="Jenkins"> </p>
+</section>
+
+
+
+<!-- Slide: Creating a Freestyle Job -->
+<section class="slide">
+    <h2>Creating a Freestyle Job in Jenkins</h2>
+    <p>Jenkins jobs are the core units of work (or "project").</p>
+    <p>A <strong>job is a set of instructions that Jenkins executes</strong> — like running a <strong>build, a script, tests</strong> and how <strong>logs</strong> are stored.</p>
+    <p>Let's create a basic <strong>Freestyle job</strong> that prints the current date.</p>
+    
+</section>
+
+<!-- Slide: Step 1 – Create Job -->
+<section class="slide">
+    <h2>Step 1: Create a Freestyle Project</h2>
+    <ul>
+        <li>Open Jenkins dashboard</li>
+        <li>Click <strong>New Item</strong></li>
+        <li>Select <strong>Freestyle project</strong></li>
+        <li>Enter a name (e.g., <em>Print-Date</em>)</li>
+        <li>Click <strong>OK</strong></li>
+        <p><img src="images/ch5_2_jenkins_project.png" alt="Jenkins project"></p>
+    </ul>
+</section>
+
+<!-- Slide: Step 2 – Add Build Step -->
+<section class="slide">
+    <h2>Step 2: Add a Shell Build Step</h2>
+    <ul>
+        <li>Scroll to the <strong>Build</strong> section</li>
+        <li>Click <strong>Add build step → Execute shell</strong></li>
+        <li>In the command box, enter:</li>
+    </ul>
+    <pre><code>
+date
+    </code></pre>
+    <p>This command prints the current system date/time when the job runs.</p>
+    <p><img src="images/ch5_3_jenkins_fortune.png" alt="Jenkins fortune"></p>
+</section>
+
+<!-- Slide: Running the Job -->
+<section class="slide">
+    <h2>Running the Job</h2>
+    <p>To test the job:</p>
+    <ul>
+        <li>Click <strong>Build Now</strong></li>
+        <li>Check the <strong>Build History</strong> panel</li>
+        <li>Click a build number</li>
+        <li>Open <strong>Console Output</strong> to see the date</li>
+    </ul>
+    <p>You will see output similar to:</p>
+    <pre><code>
+Wed Feb 12 14:35:12 IST 2025
+    </code></pre>
+</section>
+
+<!-- Slide: Job History Benefit -->
+<section class="slide">
+    <h2>Why Job History Matters</h2>
+    <p>Jenkins keeps a complete record of previous executions:</p>
+    <ul>
+        <li>View logs to debug failed builds</li>
+        <li>Compare outputs across runs</li>
+        <li>Identify which change introduces issues</li>
+        <li>Track behavior over time</li>
+    </ul>
+</section>
+
+<!-- Slide: Optional Commands -->
+<section class="slide">
+    <h2>If date Isn't Available</h2>
+    <p>The <strong>date</strong> command is installed by default on all Linux systems.</p>
+    <p>If you want an alternative output, you can use:</p>
+    <pre><code>
+echo "Build executed successfully"
+    </code></pre>
+</section>
+
+<!-- Slide: Title -->
+<section class="slide">
+    <h1>Managing Build Dependencies</h1>
+    <p>Build <strong>dependencies</strong> are the <strong>external tools, libraries, and packages required to compile</strong> or run software <strong>during a CI build</strong>.</p>
+
+</section>
+
+<!-- Slide: CI Dependency Challenges -->
+<section class="slide">
+    <h2>The Challenge of Dependencies</h2>
+    <p>In our simple example, we only printed a date to the Jenkins log, but Real-world builds rely heavily on dependencies.</p>
+    <p><strong>Installing</strong> and maintaining these <strong>dependencies</strong> is a <strong>major responsibility</strong> when operating a <strong>CI server</strong>.</p>
+</section>
+
+<!-- Slide: Declarative Build Systems -->
+<section class="slide">
+    <h2>Declarative Build Systems</h2>
+    <p>Some build tools explicitly list their dependencies, making them easier to manage:</p>
+    <ul>
+        <li><strong>Maven (Java)</strong> – uses <em>POM.xml</em> to describe dependencies and fetches them automatically.</li>
+        <li><strong>Grunt (JavaScript)</strong> – uses <em>package.json</em> and build files to install needed modules.</li>
+        <li><strong>Go (Golang)</strong> – uses module files and can pull dependencies directly from GitHub.</li>
+    </ul>
+</section>
+
+<!-- Slide: Autotools Approach -->
+<section class="slide">
+    <h2>C/C++ and Autotools</h2>
+    <p>C/C++ projects often use <strong>GNU Autotools</strong>, which take a different approach:</p>
+    <ul>
+        <li>Tools like <strong>Autoconf</strong> check what dependencies exist on the system.</li>
+        <li>Build configuration is adapted to whatever is available.</li>
+        <li>Optional features are automatically disabled if dependencies are missing.</li>
+    </ul>
+</section>
+
+<!-- Slide: Autotools Example -->
+<section class="slide">
+    <h2>Example: Building Emacs</h2>
+    <p>When building Emacs, a configuration script detects available libraries:</p>
+    <ul>
+        <li>If image libraries exist → image support is enabled.</li>
+        <li>If not → the final executable lacks that feature.</li>
+    </ul>
+    <p>This flexibility is useful but not ideal in enterprise builds where consistency is required.</p>
+</section>
+
+<!-- Slide: Enterprise Needs -->
+<section class="slide">
+    <h2>Enterprise Build Requirements</h2>
+    <p>Enterprises need deterministic builds:</p>
+    <ul>
+        <li>No missing features</li>
+        <li>No surprises due to inconsistent build environments</li>
+        <li>Guaranteed functionality in production</li>
+    </ul>
+</section>
+
+<!-- Slide: RPM as a Solution -->
+<section class="slide">
+    <h2>RPM and Spec Files</h2>
+    <p>Red Hat–based systems use the <strong>RPM (Red Hat Package Manager)</strong> system to solve dependency issues.</p>
+    <p>The core component is the <strong>spec file</strong> (specification file), which:</p>
+    <ul>
+        <li>Lists required build dependencies(gcc, autoconf)</li>
+        <li>Defines build commands and configuration options</li>
+        <li>Allows patching source code before building</li>
+    </ul>
+</section>
+
+<!-- Slide: Spec File Advantages -->
+<section class="slide">
+    <h2>Why Spec Files Help</h2>
+    <p>A spec file provides reproducibility because:</p>
+    <ul>
+        <li>It declares all build dependencies</li>
+        <li>Sources must remain <strong>pristine</strong>.</li>
+        <li>If modifications are needed, patches are applied during the build process.</li>
+        <li>Spec files act like macro-powered shell scripts to automate the entire build.</li>
+    </ul>
+    <p>This results in predictable, enterprise-grade builds.</p>
+</section>
+
+<!-- Slide: Title -->
+<section class="slide">
+    <h1>The Final Artifact</h1>
+    <p>The <strong>output of a build</strong> process is a deployable <strong>artifact</strong>. Different build systems and platforms produce different types of artifacts.</p>
+
+    <h2>Common Build Artifacts</h2>
+    <ul>
+        <li><strong>.rpm</strong> – Produced by the RPM system (Red Hat–based OS)</li>
+        <li><strong>.deb</strong> – Produced on Debian-based distributions</li>
+        <li><strong>.ear</strong> – Enterprise Archive for Java Enterprise applications (Maven output)</li>
+    </ul>
+    <p>These are the files we later deploy to production servers.</p>
+</section>
+
+<!-- Slide: Build vs Deployment -->
+<section class="slide">
+    <h2>Build vs Deployment</h2>
+    <p>This chapter focuses on building artifacts.</p>
+    <p>Actual deployment will be covered later in <strong>Chapter 7 – Deploying the Code</strong>.</p>
+    <p>Even while building, we must understand how deployment works.</p>
+</section>
+
+<!-- Slide: Rule of Thumb -->
+<section class="slide">
+    <h2>Preferred Packaging Approach</h2>
+    <p>General guideline:</p>
+    <p><strong>Operating system–level packaging is preferable to specialized packaging.</strong></p>
+    <p>This provides consistency across technologies and environments.</p>
+</section>
+
+<!-- Slide: Example: Deploying an EAR -->
+<section class="slide">
+    <h2>Example: Deploying a Java EAR</h2>
+    <p>Several deployment strategies exist:</p>
+    <ul>
+        <li>Deploy EAR as an <strong>RPM package</strong> using OS-level tools</li>
+        <li>Deploy EAR using <strong>application server mechanisms</strong> (JBoss, WildFly, GlassFish)</li>
+    </ul>
+</section>
+
+<!-- Slide: Why Prefer OS-Level Packaging? -->
+<section class="slide">
+    <h2>Why Prefer OS-Level Packaging?</h2>
+    <ul>
+        <li>You already manage your base OS → reuse existing deployment pipelines</li>
+        <li>Most organizations deploy multiple technologies, not just Java</li>
+        <li>OS-level packaging is more versatile and consistent</li>
+        <li>Reduces complexity across diverse tech stacks</li>
+    </ul>
+</section>
+
+<!-- Slide: Real-World Experience -->
+<section class="slide">
+    <h2>Industry Practice</h2>
+    <p>Most organizations use mixed architectures:</p>
+    <ul>
+        <li>Java applications</li>
+        <li>HTML, JavaScript, Python, Go services</li>
+        <li>Backend services in multiple languages</li>
+    </ul>
+    <p>OS-level packaging tends to work more universally across these systems.</p>
+</section>
+
+<!-- Slide: Mixed OS Environments -->
+<section class="slide">
+    <h2>When OS Packaging Might Not Be Best</h2>
+    <p>In practice mixed environments where Unix servers coexist with Windows servers</p>
+    <ul>
+        <li>Unix servers use RPM or DEB packaging</li>
+        <li>Windows often relies on custom deployment solutions</li>
+    </ul>
+    <p>This is an observation, not a recommendation.</p>
+    <p>in this case OS Packaging Might Not Be Best</p>
+ </section>
+
+<!-- Slide: Containers as an Alternative -->
+<section class="slide">
+    <h2>Container-Based Deployment</h2>
+    <p>Another option is to deploy software using container technologies such as Docker.</p>
+    <p>Containers package the application with its dependencies, providing a portable runtime environment.</p>
+</section>
+<section class="slide">
+<h4>In Short</h4>
+
+<ul>
+<li>After building your software, you get a file that needs to be deployed.
+
+<li>There are many ways to deploy it.
+
+<li>The author prefers using the operating system’s own package system (like RPM or .deb) because it works for many technologies and simplifies deployment across diverse systems.
+
+<li>Application server–specific deployment is more specialized and less reusable.
+
+<li>Containers like Docker are another alternative.
+</ul>
+</section>
+
+<!-- Slide: Title -->
+<section class="slide">
+    <h1>Cheating with FPM</h1>
+    <p><strong>FPM</strong> is a powerful <strong>Ruby-based tool</strong> that can quickly <strong>generate OS packages (RPM, DEB, etc.) without</strong> writing full <strong>spec files</strong>.</p>
+</section>
+
+<!-- Slide: Why Use FPM? -->
+<section class="slide">
+    <h2>Why Use FPM?</h2>
+    <p>Spec files are ideal for production-grade packaging but can be complex.</p>
+    <p>FPM offers a faster, easier alternative for package creation:</p>
+    <ul>
+        <li>Useful when you own the codebase</li>
+        <li>No need to write spec files</li>
+        <li>Supports many package formats (RPM, DEB, tar, etc.)</li>
+    </ul>
+</section>
+
+<!-- Slide: Installing FPM on Ubuntu -->
+<section class="slide">
+    <h2>Installing FPM on Ubuntu</h2>
+    <p>FPM can be installed using Ruby’s gem system:</p>
+    <pre><code>
+sudo apt update
+sudo apt install ruby ruby-dev gcc make rubygems
+sudo gem install --no-document fpm
+    </code></pre>
+    <p>This installs the <strong>fpm</strong> command-line tool.</p>
+</section>
+
+<!-- Slide: Example Script -->
+<section class="slide">
+    <h2>Example: Hello World Script</h2>
+    <p>Create a simple shell script:</p>
+    <pre><code>
+#!/bin/sh
+echo "Hello World!"
+    </code></pre>
+    <p>We want this installed under <strong>/usr/local/bin</strong>.</p>
+</section>
+
+<!-- Slide: Preparing Directory Structure -->
+<section class="slide">
+    <h2>Prepare Directory Structure</h2>
+    <p>Create the directory layout FPM will package:</p>
+    <pre><code>
+mkdir -p ~/hello/usr/local/bin
+cp hello.sh ~/hello/usr/local/bin/
+chmod a+x ~/hello/usr/local/bin/hello.sh
+    </code></pre>
+</section>
+
+<!-- Slide: Creating a DEB Package -->
+<section class="slide">
+    <h2>Creating a DEB Package with FPM</h2>
+    <p>Use FPM to generate a Debian package:</p>
+    <pre><code>
+cd ~/hello
+fpm -s dir -t deb -n hello-world -v 1 -C . usr
+    </code></pre>
+    <p>This produces <strong>hello-world_1.deb</strong>.</p>
+</section>
+
+<!-- Slide: Testing the Package -->
+<section class="slide">
+    <h2>Testing the Package</h2>
+    <p>Inspect the package:</p>
+    <pre><code>
+dpkg -I hello-world_1.deb
+    </code></pre>
+    <p>Install the package:</p>
+    <pre><code>
+sudo dpkg -i hello-world_1.deb
+    </code></pre>
+    <p>The script is now installed in <strong>/usr/local/bin</strong>.</p>
+</section>
+
+<!-- Slide: Why FPM is “Cheating” -->
+<section class="slide">
+    <h2>Why FPM Feels Like Cheating</h2>
+    <ul>
+        <li>Creates packages with a single command</li>
+        <li>No complex spec files needed</li>
+        <li>Works for RPM, DEB, tar, Python modules, and more</li>
+    </ul>
+    <p>It offers a simple way to package software quickly.</p>
+</section>
+
+<!-- Slide: Title -->
+<section class="slide">
+    <h1>Continuous Integration (CI)</h1>
+    <p>Continuous Integration ensures that every code change triggers an automated build to verify quality and detect issues early.</p>
+
+    <h2>Why Continuous Integration?</h2>
+    <ul>
+        <li>Automatically builds and tests code after each change</li>
+        <li>Catches integration issues early</li>
+        <li>Ensures code quality across contributions</li>
+        <li>Supports teams with multiple developers</li>
+    </ul>
+</section>
+
+<!-- Slide: Integration Testing -->
+<section class="slide">
+    <h2>Integration Testing</h2>
+    <p>With <strong>many developers contributing</strong>, it’s critical to <strong>verify that all changes work together</strong>.</p>
+    <p><strong>CI validates</strong> combined work through <strong>integration tests.</strong></p>
+</section>
+
+<!-- Slide: Merge Hell -->
+<section class="slide">
+    <h2>The Problem: Merge Hell</h2>
+    <p>If developers avoid merging for too long, branches diverge significantly.</p>
+    <p>This causes:</p>
+    <ul>
+        <li>Complex merges</li>
+        <li>Conflicting changes</li>
+        <li>Reduced productivity</li>
+    </ul>
+    <p>The Root cause of <strong>merge hell</strong> is often, perhaps surprisingly, <strong>psychological</strong></p>
+</section>
+
+<!-- Slide: DevOps Perspective -->
+<section class="slide">
+    <h2>DevOps & CI</h2>
+    <p>A goal of DevOps is to reduce friction for important activities such as merging and testing.</p>
+    <p>CI encourages frequent check-ins, reducing the risk of divergence.</p>
+</section>
+
+<!-- Slide: CI Build Characteristics -->
+<section class="slide">
+    <h2>CI Build Characteristics</h2>
+    <p>CI builds are more rigorous than local builds:</p>
+    <ul>
+        <li>Run automated tests</li>
+        <li>Perform quality checks</li>
+        <li>Use clean environments</li>
+        <li>Take longer than developer builds</li>
+    </ul>
+</section>
+
+<!-- Slide: Hardware & Performance -->
+<section class="slide">
+    <h2>Build Performance</h2>
+    <p>Modern hardware is powerful and relatively inexpensive.</p>
+    <p>This allows CI servers to run intensive builds quickly.</p>
+    <p>Fast builds encourage developers to:</p>
+    <ul>
+        <li>Commit more frequently</li>
+        <li>Integrate continuously</li>
+    </ul>
+</section>
+
+<!-- Slide: CI Benefits -->
+<section class="slide">
+    <h2>Benefits of CI</h2>
+    <p>If the builds are fast enough to not be seen as tedious, developers will be enthused to check in often, Then.</p>
+    <ul>
+        <li>Early detection of integration issues</li>
+        <li>Higher code quality</li>
+        <li>Shorter feedback loops</li>
+        <li>Improved team collaboration</li>
+    </ul>
+    <p>Frequent integration avoids <strong>merge hell</strong> and keeps development smooth.</p>
+</section>
+
+<!-- Slide 1 -->
+<div class="slide">
+    <h1>Continuous Delivery (CD)</h1>
+    <p><strong>Continuous Delivery</strong> is the step that comes <strong>after  Continuous Integration(CI)</strong>.  
+       It ensures every successful build <strong>can be deployed any time.</strong>.</p>
+</div>
+
+<div class="slide">
+	<h2>What happens after CI?</h2>
+
+<ul>
+<li><strong>CI builds and tests your code.</strong></li>
+If everything passes, it produces an artifact (JARs, RPMs, Docker images, etc.).
+
+<li><strong>The build server uploads the artifact to a storage location</strong>, usually called an <strong>artifact repository</strong>(JFrog Artifactory,GitHub Packages,Sonatype Nexus Repository,Docker Hub,PyPI,npm Registry).
+</li>
+<li><strong>Deployment servers</strong> (or tools like Ansible, Kubernetes, Octopus Deploy, etc.) take these artifacts and <strong>deploy them to your test or production servers.</strong>
+</li>
+</ul>
+</div>
+
+<div class="slide">
+    <h2>Artifact Repositories</h2>
+    <ul>
+        <li><strong>Nexus Repository Manager</strong>
+            <ul>
+                <li>Common in Java world</li>
+                <li>Supports Java, JavaScript, Docker Registry API</li>
+                <li>Supports RPM Yum channels</li>
+            </ul>
+        </li>
+        <li>Yum/DNF repositories can also be created with simple shell scripts.</li>
+    </ul>
+</div>
+
+
+<div class="slide">
+    <h2>Goal of Continuous Delivery</h2>
+    <ul>
+        <li>Automate the entire path from code commit → deployable artifact.</li>
+        <li>Reduce manual steps and human errors.</li>
+    </ul>
+
+    <h2>Benefits of Continuous Delivery</h2>
+    <ul>
+        <li>Smaller, more frequent deployments</li>
+        <li>Faster feedback cycle</li>
+        <li>Make deployment predictable, fast, and low-risk.</li>
+        <li>Stable, test-ready builds at all times</li>
+    </ul>
+
+    <p>Continuous Delivery ensures <strong>smooth and reliable software deployment</strong>.</p>
+</div>
+
+
+<!-- Slide 1 -->
+<div class="slide">
+    <h1>Jenkins Plugins</h1>
+    <p>Jenkins has a powerful and extensible plugin system that allows you to add new features to the build server.</p>
+</div>
+
+<!-- Slide 2 -->
+<div class="slide">
+    <h2>Why Plugins?</h2>
+    <ul>
+        <li>Extend Jenkins capabilities</li>
+        <li>Integrate with external tools</li>
+        <li>Add support for new build languages</li>
+        <li>Enable DevOps workflows</li>
+    </ul>
+</div>
+
+<!-- Slide 3 -->
+<div class="slide">
+    <h2>Plugin Installation</h2>
+    <ul>
+        <li>Plugins can be installed from Jenkins Web UI</li>
+        <li>No restart needed for many plugins</li>
+        <li>Large plugin ecosystem maintained by community</li>
+        <li>Plugins can be updated individually</li>
+    </ul>
+</div>
+
+<!-- Slide 4 -->
+<div class="slide">
+    <h2>Examples of Available Plugins</h2>
+    <ul>
+        <li>Git Plugin</li>
+        <li>Pipeline Plugin</li>
+        <li>Docker Plugin</li>
+        <li>Credentials Plugin</li>
+        <li>Slack Notification Plugin</li>
+        <li>JUnit & Report Plugins</li>
+    </ul>
+    <p>These represent the diversity of Jenkins integrations.</p>
+</div>
+
+<!-- Slide 5 -->
+<div class="slide">
+    <h2>Git Plugin</h2>
+    <p>For our CI workflow, the <strong>Git plugin</strong> is essential.</p>
+    <ul>
+        <li>Allows Jenkins to poll Git repositories</li>
+        <li>Supports GitHub, GitLab, Bitbucket</li>
+        <li>Enables Webhooks and SCM triggers</li>
+    </ul>
+</div>
+
+<!-- Slide 6 -->
+<div class="slide">
+    <h2>Leiningen Plugin</h2>
+    <p>Our sample organization uses <strong>Clojure</strong>, so Jenkins needs support for Clojure builds.</p>
+    <ul>
+        <li>Install the <strong>Leiningen plugin</strong></li>
+        <li>Adds native support for Clojure build tasks</li>
+        <li>Allows Jenkins jobs to run <code>lein</code> commands directly</li>
+        <li>Integrates well with CI pipelines</li>
+    </ul>
+</div>
+
+<!-- Slide 7 -->
+<div class="slide">
+<h2>Pipeline Plugin</h2>
+<p>The <strong>Pipeline plugin</strong> is one of the most important components in modern Jenkins setups. It enables the creation of complex CI/CD workflows using code.</p>
+<ul>
+    <li>Allows defining builds as <strong>Jenkinsfiles</strong> stored in source control</li>
+	<li>Makes pipelines repeatable, version-controlled, and easier to maintain</li>
+    <li>Supports both <strong>Declarative</strong> and <strong>Scripted</strong> pipeline syntaxes</li>
+    <li>Enables multi-stage workflows such as build → test → package → deploy</li>
+    <li>Provides visualization of pipeline stages in the Jenkins UI</li>
+</ul>
+</div>
+
+<section class="slide">
+    <h2>The Host Server</h2>
+
+    <p>
+        The build server is a <strong>critical machine</strong> in any organization. 
+        It handles the resource-heavy task of building software, which requires:
+    </p>
+
+    <ul>
+        <li>High CPU power (multiple processor cores)</li>
+        <li>Large amounts of RAM</li>
+        <li>Plenty of fast disk space</li>
+    </ul>
+
+    <p>
+        Since builds are <strong>processor, memory, and disk intensive</strong>, 
+        a powerful host ensures builds don’t take too long and developers remain productive.
+    </p>
+
+    <p>
+        The build server also has a <strong>social aspect</strong> — it is the place where 
+        code from many developers integrates for the first time.  
+        Faster servers encourage frequent integration and reduce bottlenecks.
+    </p>
+
+    <p>
+        <strong>Machines are cheaper than people</strong>, so the build server is not 
+        the place to cut costs. Invest well to avoid delays and inefficiencies.
+    </p>
+</section>
+
+<!-- Slide: Build Slaves Overview -->
+<section class="slide">
+    <h2>Build Slaves</h2>
+    <p>
+        To reduce build queues, Jenkins allows adding <strong>build slaves</strong>. 
+        The master server distributes builds to slaves using round-robin scheduling 
+        or by assigning specific jobs to specific slaves.
+    </p>
+    <p>
+        This is especially useful when different builds require different 
+        operating systems or tools.
+    </p>
+</section>
+
+<!-- Slide: Why Use Build Slaves -->
+<section class="slide">
+    <h2>Why Use Build Slaves?</h2>
+    <ul>
+        <li>Increase parallel build capacity</li>
+        <li>Reduce wait times in build queues</li>
+        <li>Support builds on multiple operating systems</li>
+        <li>Offload heavy workloads from the master</li>
+    </ul>
+    <p>
+        Example: A Linux master can use Windows slaves for Windows builds 
+        or a Mac slave for macOS-specific components.
+    </p>
+</section>
+
+<!-- Slide: Methods to Add Build Slaves -->
+<section class="slide">
+    <h2>Connecting Build Slaves</h2>
+    <p>Build slaves must allow the Jenkins master to issue commands. Common methods:</p>
+    <ul>
+        <li><strong>SSH</strong> – Jenkins has built-in SSH support for connecting slaves</li>
+        <li><strong>JNLP client</strong> – Slave downloads a Java Web Start (JNLP) agent from master</li>
+        <li>Useful when the slave does not run an SSH server</li>
+    </ul>
+    <p>
+        More details: <em>Jenkins Distributed Builds</em> documentation.
+    </p>
+</section>
+
+<!-- Slide: Cross-Compilation Note -->
+<section class="slide">
+    <h2>Cross-Compilation</h2>
+    <p>
+        Sometimes it's easier to compile for a different OS using cross-compilers.
+        For example, Linux can build Windows binaries using <strong>MinGW</strong>.
+    </p>
+	<h3>Why Cross-Compilation</h3>
+    <p>
+		Sometimes installing a Windows build environment is harder or slower than compiling from Linux.
+    </p>
+</section>
+
+<!-- Slide: Native Code Considerations -->
+<section class="slide">
+    <h2>Native Code in Build Systems</h2>
+    <p>A big system usually comprises many different parts, and some of the parts might contain native code for different platforms.</p>
+    <ul>
+        <li>Native Android components</li>
+        <li>High-performance server modules in C</li>
+        <li>Client-side components in C/C++</li>
+        <li>Telecom codecs and hardware drivers</li>
+        <li>High-speed financial messaging libraries</li>
+    </ul>
+</section>
+
+<!-- Slide: Importance of Centralized Builds -->
+<section class="slide">
+    <h2>The Importance of Centralized Builds</h2>
+    <p>
+        All code—especially native components—must be <strong>buildable on the CI server</strong>.
+        Otherwise, critical parts may only compile on a random developer’s machine,
+        which is risky and hard to maintain.
+    </p>
+    <p>
+        Each organization has different needs, and only your team can determine 
+        what platforms and build environments are required.
+    </p>
+</section>
+
+<!-- Slide: Software on the Host -->
+<section class="slide">
+    <h2>Software on the Host</h2>
+    <p>
+        Depending on the complexity of your builds, the build server may need to have 
+        many different build tools installed. Jenkins usually <strong>triggers</strong> the build, 
+        while the actual compilation is handled by tools such as <strong>Maven</strong>, <strong>Gradle</strong>, 
+        <strong>Make</strong>, or <strong>Golang</strong> build systems.
+    </p>
+</section>
+
+<!-- Slide: Preferred Host OS -->
+<section class="slide">
+    <h2>Choosing the Host Operating System</h2>
+    <p>
+        In practice, it is most convenient to run Jenkins on a <strong>Linux-based host</strong>.
+        Linux distributions include a wide library of build tools in their repositories,
+        making installation and updates extremely easy.
+    </p>
+    <ul>
+        <li>Wide availability of build tool packages</li>
+        <li>Simpler automation and scripting</li>
+        <li>Better stability and resource efficiency</li>
+    </ul>
+</section>
+
+<!-- Slide: Keeping the Build Server Updated -->
+<section class="slide">
+    <h2>Keeping the Build Server Updated</h2>
+    <p>
+        You can use the same <strong>deployment and patching systems</strong> that maintain your 
+        production servers to keep the Jenkins host up to date.
+    </p>
+    <p>
+        This ensures consistency, security, and predictable environments across all servers.
+    </p>
+</section>
+
+<!-- Slide: Jenkins-Managed Tools -->
+<section class="slide">
+    <h2>Jenkins-Managed Build Tools</h2>
+    <p>
+        Jenkins can automatically install some builder tools on build slaves—such as 
+        <strong>Maven</strong>—when supported by the appropriate plugin.
+    </p>
+    <p>
+        This is convenient, but it only works when the builder has Jenkins integration.  
+        Many build tools must still be installed manually on the host OS.
+    </p>
+</section>
+
+<!-- Slide: Build Triggers -->
+<section class="slide">
+    <h2>Build Triggers</h2>
+    <p>
+        Jenkins jobs can be started automatically through various trigger mechanisms. 
+        These help ensure that builds happen consistently and at the right time.
+    </p>
+</section>
+
+<!-- Slide: Polling and Timers -->
+<section class="slide">
+    <h2>Polling & Timer-Based Triggers</h2>
+    <ul>
+        <li>
+            <strong>Polling the code repository:</strong><br>
+            Jenkins checks Git at regular intervals. If new commits are found, a build is triggered.
+        </li>
+        <li>
+            <strong>Timer-based triggers:</strong><br>
+            Specific schedules (e.g., cron expressions) can run builds at fixed times.
+        </li>
+    </ul>
+</section>
+
+<!-- Slide: Combining Triggers -->
+<section class="slide">
+    <h2>Combining Triggers</h2>
+    <p>
+        In many workflows, both polling and timers are used:
+    </p>
+    <ul>
+        <li>
+            Poll Git so that <strong>every meaningful change</strong> triggers an immediate build.
+        </li>
+        <li>
+            Run <strong>nightly builds</strong> that perform deeper checks, even if no code changed.
+        </li>
+    </ul>
+</section>
+
+<!-- Slide: Upstream & Downstream Triggers -->
+<section class="slide">
+    <h2>Upstream & Downstream Builds</h2>
+    <ul>
+        <li>
+            A successful build of one job can automatically trigger another job.
+        </li>
+        <li>
+            This is useful in multi-stage pipelines or when different components depend on each other.
+        </li>
+        <li>
+            Upstream → Downstream chaining ensures proper sequencing and dependency handling.
+        </li>
+    </ul>
+</section>
+
+<!-- Slide: Job Chaining -->
+<section class="slide">
+    <h2>Job Chaining in Jenkins</h2>
+    <p>
+        Jenkins allows jobs to be connected so that one job triggers another when it completes.
+        This is known as <strong>job chaining</strong>.
+    </p>
+    <ul>
+        <li>The first job is the <strong>upstream</strong> job</li>
+        <li>The triggered job is the <strong>downstream</strong> job</li>
+        <li>Multiple jobs can be chained sequentially</li>
+        <li>Useful for simple multi-step build flows</li>
+    </ul>
+</section>
+
+<!-- Slide: Need for Pipelines -->
+<section class="slide">
+    <h2>Why Build Pipelines?</h2>
+    <p>
+        Chaining jobs works for simple workflows, but complex CI/CD processes
+        need more flexibility and better visualization.
+    </p>
+    <p>
+        A <strong>pipeline</strong> provides:
+    </p>
+    <ul>
+        <li>Clear stage-by-stage visualization</li>
+        <li>Better flow control (parallel steps, conditionals, retries)</li>
+        <li>Version-controlled build instructions via Jenkinsfile</li>
+        <li>Cleaner and more maintainable CI/CD logic</li>
+    </ul>
+</section>
+
+<!-- Slide: Pipeline Plugins -->
+<section class="slide">
+    <h2>Pipeline Plugins</h2>
+    <p>Several Jenkins plugins enhance build pipeline capabilities:</p>
+    <ul>
+        <li>Multi-Job Plugin</li>
+        <li>Workflow Plugin</li>
+        <li><strong>Pipeline Plugin (recommended)</strong></li>
+    </ul>
+    <p>
+        The Pipeline plugin is the most advanced and uses a <strong>Groovy DSL</strong>.
+        Pipelines can be stored in a <strong>Jenkinsfile</strong> inside Git.
+    </p>
+</section>
+
+<!-- Slide: Pipeline Example (Java + Maven + .deb) -->
+<section class="slide">
+    <h2>Pipeline Example: Java App with Maven</h2>
+    <p>
+        This pipeline fetches a Java application from GitHub, compiles it with Maven,
+        runs tests, builds a JAR, and packages it into a <strong>.deb</strong> using FPM.
+    </p>
+</section>
+
+<!-- Slide: Jenkinsfile Script -->
+<section class="slide">
+    <h2>Sample Jenkinsfile (Groovy)</h2>
+    <pre><code>
+pipeline {
+    //agent any
+    agent { label 'linux' }
+
+    tools {
+		jdk 'jdk21'
+		maven 'maven3'
+          }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git url: 'https://github.com/laxmi916/hello-java.git', branch: 'master'
+            }
+        }
+
+	stage('Compile') {
+		steps {
+			sh 'mvn clean compile'
+		}
+	}
+
+	stage('Test') {
+		steps {
+			sh 'mvn test'
+		}
+	}
+
+	stage('Package') {
+		steps {
+			sh 'mvn package'
+		}
+	}
+
+
+        stage('Create JAR Artifact') {
+            steps {
+                sh 'cp target/myapp-1.0.jar build/'
+            }
+        }
+
+        stage('Build .deb Package') {
+            steps {
+                sh '''
+                    mkdir -p pkg/usr/local/bin
+                    cp build/myapp-1.0.jar pkg/usr/local/bin/
+
+                    fpm -s dir -t deb \
+                        -n myapp \
+                        -v 1.0 \
+                        -C pkg \
+                        usr/local/bin/myapp-1.0.jar
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+    }
+}
+</code></pre>
+</section>
+
+<!-- Slide: Pipeline Visualization -->
+<section class="slide">
+    <h2>Pipeline Visualization</h2>
+    <p>
+        Jenkins provides a graphical view of the pipeline stages as it executes.
+        This helps track progress and diagnose failures.
+    </p>
+    <p><em>Example pipeline UI:</em></p>
+    <p>
+        <img src="./images/ch5_5_jenkins_pipeline.png" 
+             alt="Pipeline Stage View" 
+             style="width:100%; border:1px solid #ccc; border-radius:6px;">
+    </p>
+</section>
+
+<div class="slide">
+    <h1>A Look at the Jenkins Filesystem Layout</h1>
+    <p>Understanding Jenkins’ directory structure helps in backup, debugging, and storage management.</p>
+</div>
+
+<div class="slide">
+    <h2>Job Storage Location</h2>
+    <p>On Linux installations such as Fedora or Ubuntu, Jenkins stores job definitions here:</p>
+    <p><code>/var/lib/jenkins/jobs</code></p>
+    <ul>
+        <li>Each job has its own directory</li>
+        <li>Job configuration is stored in XML files</li>
+        <li>Each job also contains a <strong>workspace</strong> folder</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Why The Filesystem Matters</h2>
+    <ul>
+        <li>You can back up job XML files to rebuild Jenkins after a failure</li>
+        <li>Useful when debugging unexpected build failures</li>
+        <li>Helps when investigating broken dependencies or corrupted build caches</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Disk Space Considerations</h2>
+    <ul>
+        <li>Builds consume significant disk space</li>
+        <li>Old builds may need to be cleaned manually if misconfigured</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Debugging Build Failures</h2>
+    <ul>
+        <li>Sometimes the build server filesystem does not match expected state</li>
+        <li>Local repository corruption can break Maven builds</li>
+        <li>Inspecting workspace can reveal missing files or environment issues</li>
+    </ul>
+</div>
+
+
+<div class="slide">
+    <h1>Build Servers & Infrastructure as Code</h1>
+    <p>Jenkins is powerful, but it sometimes differs from the DevOps philosophy that <strong>infrastructure should be defined as code</strong>.</p>
+</div>
+
+<div class="slide">
+    <h2>The Impedance Mismatch</h2>
+    <ul>
+        <li>Jenkins stores job descriptors as text files (XML)</li>
+        <li>But the <strong>primary interface</strong> is the GUI, not the text files</li>
+        <li>This creates a mismatch between GUI-driven configuration and code-driven infrastructure</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Strengths of the Jenkins GUI</h2>
+    <ul>
+        <li>Easy to create and modify jobs without deep Jenkins knowledge</li>
+        <li>Quick experimentation and ad-hoc build configurations</li>
+        <li>Simplifies onboarding for new team members</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Weaknesses of GUI-First Configuration</h2>
+    <ul>
+        <li>No native support for programming features such as inheritance</li>
+        <li>Function reusability requires extra plugins or shared libraries</li>
+        <li>Hard to version-control changes made through the GUI</li>
+        <li>Not ideal for teams following strict IaC (Infrastructure as Code) practices</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Alternative: GitLab CI</h2>
+    <ul>
+        <li>GitLab takes a <strong>code-first</strong> approach</li>
+        <li>Build configurations are written in <code>.gitlab-ci.yml</code></li>
+        <li>Fully version-controlled pipelines</li>
+        <li>Better alignment with Infrastructure as Code principles</li>
+       	   <li>A good option if you don’t need all the advanced Jenkins plugin features</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Make-Style Dependencies</h2>
+    <p>In <strong>Make</strong>, dependencies are written explicitly:</p>
+    <pre>
+a.out : b.o c.o
+b.o : b.c
+c.o : c.c
+    </pre>
+    <p>This means <strong>b.o</strong> and <strong>c.o</strong> must be built before <strong>a.out</strong>.</p>
+</div>
+
+<div class="slide">
+    <h2>Maven and Gradle Build Graph</h2>
+    <ul>
+        <li><strong>Maven</strong> derives its build order from artifact dependencies.</li>
+        <li><strong>Gradle</strong> dynamically constructs a dependency graph before execution.</li>
+        <li>These tools ensure components are built automatically in the correct sequence.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Jenkins Reactor Visualization</h2>
+    <ul>
+        <li>Jenkins supports visualizing <strong>Maven reactor build order</strong>.</li>
+        <li>Useful for understanding large, multi-module Maven builds.</li>
+        <li>Not available for Make-style builds.</li>
+    </ul>
+    <p>        <img src="./images/ch5_6_jenkins_reactor.png" 
+             alt="Pipeline Stage View" 
+             style="width:100%; border:1px solid #ccc; border-radius:6px;"></p>
+</div>
+
+<div class="slide">
+
+    <p>Each row in the screenshot represents:</p>
+    <ul>
+        <li>A <strong>separate Maven module</strong> inside the same parent project</li>
+        <li>Built as part of the same <strong>reactor build execution</strong></li>
+    </ul>
+
+    <h3>Module Name</h3>
+    <p>Examples: <strong>acd</strong>, <strong>adminWeb</strong>, 
+       <strong>alarm-handling-service</strong>, <strong>customer-web-resources</strong>, etc.</p>
+
+    <p>These correspond to modules defined in the Maven <code>pom.xml</code>:</p>
+
+    <pre>
+&lt;modules&gt;
+    &lt;module&gt;adminWeb&lt;/module&gt;
+    &lt;module&gt;acd&lt;/module&gt;
+    &lt;module&gt;alarm-handling-service&lt;/module&gt;
+    ...
+&lt;/modules&gt;
+    </pre>
+
+    <h3>Weather Icon</h3>
+    <p>Indicates overall build health of each module:</p>
+
+    <ul>
+        <li>🌞 <strong>Stable</strong></li>
+        <li>🌤 <strong>Mostly successful</strong></li>
+        <li>🌧 <strong>Frequently failing</strong></li>
+    </ul>
+
+    <p>This icon reflects the module's <strong>build history</strong>, not the parent job.</p>
+</div>
+
+<div class="slide">
+    <h2>Build Phases in Maven</h2>
+    <p>Maven provides a <strong>standardized build lifecycle</strong>, which is one of its biggest advantages.</p>
+    <p>This helps large organizations by eliminating the need to define custom build standards.</p>
+</div>
+
+<div class="slide">
+    <h2>Maven vs Other Build Tools</h2>
+    <p>Other tools like <strong>Ant</strong> or <strong>Make</strong> are more flexible, but lack a strict structure.</p>
+    <p>Maven enforces an order of phases such as:</p>
+    <ul>
+        <li><strong>Compile</strong></li>
+        <li><strong>Test</strong></li>
+        <li><strong>Package</strong></li>
+        <li><strong>Deploy</strong></li>
+    </ul>
+    <p>This rigidity can feel restrictive, but ensures consistency across teams.</p>
+</div>
+
+<div class="slide">
+    <h2>Importance of Testing</h2>
+    <p>The <strong>testing phase</strong> is crucial in any CI/CD pipeline.</p>
+    <p>A CI server must detect errors early, and <strong>automated tests</strong> make this possible.</p>
+    <p>Testing will be explored in more detail in a later chapter.</p>
+</div>
+
+<div class="slide">
+    <h2>Alternative Build Servers</h2>
+    <p>While <strong>Jenkins</strong> is widely used and dominant in many organizations, it is not the only option.</p>
+    <p>Several other build server solutions exist:</p>
+    <ul>
+        <li><strong>Travis CI</strong> – popular hosted option for open source</li>
+        <li><strong>Buildbot</strong> – Python-based and fully configurable</li>
+        <li><strong>GoCD</strong> – developed by ThoughtWorks</li>
+        <li><strong>Bamboo</strong> – by Atlassian</li>
+        <li><strong>GitLab CI/CD</strong> – built-in pipelines as part of GitLab</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Choosing a Build Server</h2>
+    <p>Before selecting a build server, consider:</p>
+    <ul>
+        <li>Features and plug-in ecosystem</li>
+        <li>Hosting model (on-premises vs cloud)</li>
+        <li>Ease of integration with existing tools</li>
+        <li>Cost and licensing</li>
+    </ul>
+    <p><strong>Beware of vendor lock-in.</strong></p>
+</div>
+
+<div class="slide">
+    <h2>Local Build Behavior</h2>
+    <p>A build server does <strong>not</strong> replace proper local builds.</p>
+    <p>Developers must ensure:</p>
+    <ul>
+        <li>Builds run cleanly on their own machine</li>
+        <li>No hidden dependencies exist</li>
+        <li>Builds are deterministic and repeatable</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Why Configuration-as-Code Matters</h2>
+    <p>Prefer build servers that support:</p>
+    <ul>
+        <li><strong>Configuration files</strong> (YAML, JSON, Groovy, etc.)</li>
+        <li>Version control for pipeline definitions</li>
+        <li>Automated, reproducible setup</li>
+    </ul>
+    <p>Tools relying only on <strong>graphical user interfaces</strong> are harder to automate and maintain.</p>
+</div>
+
+<div class="slide">
+    <h2>Collating Quality Measures</h2>
+    <p>A build server like <strong>Jenkins</strong> can collect and display software quality metrics.</p>
+    <ul>
+        <li>Java unit tests are executed during the build.</li>
+        <li>Test results are shown directly on the Jenkins job page.</li>
+        <li>Helps developers spot failing tests quickly.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>SonarQube Integration</h2>
+    <p><strong>SonarQube</strong> provides deeper code quality analysis:</p>
+    <ul>
+        <li>Runs during the build phase (Maven/Gradle plugin).</li>
+        <li>Results are sent to the <strong>SonarQube server</strong>.</li>
+        <li>Metrics are stored, tracked, and visualized over time.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Benefits of SonarQube</h2>
+    <ul>
+        <li>Tracks <strong>bugs, vulnerabilities</strong>.</li>
+        <li>Measures <strong>test coverage</strong>, <strong>complexity</strong>, <strong>duplication</strong>.</li>
+        <li>Provides dashboards for teams and managers.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Drawbacks & Best Practices</h2>
+    <ul>
+        <li>SonarQube scanning can slow down normal builds.</li>
+        <li>Recommended to run Sonar analysis during:</li>
+        <ul>
+            <li><strong>Nightly builds</strong></li>
+            <li>Scheduled pipelines</li>
+        </ul>
+        <li>Daily scans keep dashboards updated without slowing developers.</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>SonarQube Metrics Example</h2>
+    <p>Typical Sonar metrics visualized on dashboards:</p>
+    <ul>
+        <li>Lines of Code (LOC)</li>
+        <li>Cyclomatic Complexity</li>
+        <li>Rule Compliance</li>
+        <li>Code Coverage %</li>
+        <li>Duplication Percentage</li>
+        <li>Security Hotspots</li>
+    </ul>
+        <p>        <img src="./images/ch5_7_Sonar_code_metrics.png" 
+             alt="Pipeline Stage View" 
+             style="width:100%; border:1px solid #ccc; border-radius:6px;"></p>
+</div>
+
+<div class="slide">
+    <h2>Build Status Visualization</h2>
+    <p>A build server generates a lot of useful data that can be displayed visually for the team.</p>
+    <ul>
+        <li>Helps teams notice build failures immediately</li>
+        <li>Promotes awareness of CI/CD health</li>
+        <li>Encourages faster reaction to broken builds</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Kiosk-Style Dashboards</h2>
+    <p>The simplest visualization method is to use a monitor running Jenkins in a web browser.</p>
+    <ul>
+        <li>Plugins provide simplified "radiator" dashboards</li>
+        <li>Shows job status (success, failure, unstable)</li>
+        <li>Good for common work areas</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Information Radiators</h2>
+    <p>Jenkins plugins designed for shared displays:</p>
+    <ul>
+        <li>Big visible charts</li>
+        <li>Color-coded status indicators</li>
+        <li>Minimal text for quick understanding</li>
+    </ul>
+    <p><em>Purpose: Make build health visible to everyone.</em></p>
+</div>
+
+<div class="slide">
+    <h2>Physical Indicators</h2>
+    <p>Many teams use hardware connected to build status:</p>
+    <ul>
+        <li>🟢/🔴 LED indicators</li>
+        <li>Color-changing lamps</li>
+        <li>Lava lamps (classic CI symbol!)</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>The Lava Lamp Trick</h2>
+    <p>A lava lamp can indicate build quality in a fun way:</p>
+    <ul>
+        <li>The lamp stays OFF during normal operation</li>
+        <li>Build failure → lamp turns ON</li>
+        <li>Heat builds over time → lava starts moving</li>
+        <li>Fixing the build → lamp turns OFF</li>
+        <li>Lava keeps moving while the lamp cools → showing how long it was broken</li>
+    </ul>
+    <p>This creates a subtle “historical record” of build health.</p>
+</div>
+
+<div class="slide">
+    <h2>Challenges</h2>
+    <p>Maintaining a useful visual system is harder than it seems:</p>
+    <ul>
+        <li>Displays can become distracting if placed poorly</li>
+        <li>Hiding them defeats the purpose</li>
+        <li>Physical indicators need maintenance</li>
+    </ul>
+    <p><strong>Balance visibility with minimal disruption.</strong></p>
+</div>
+
+<div class="slide">
+    <h2>Taking Build Errors Seriously</h2>
+    <p>A build server can report failures and code quality issues, but it only works if developers take the signals seriously.</p>
+    <p><strong>Technical tools alone cannot solve this — team culture must support it.</strong></p>
+</div>
+
+<div class="slide">
+    <h2>The Real Challenge</h2>
+    <p>Many organizations struggle with constant firefighting:</p>
+    <ul>
+        <li>Production issues take priority over everything</li>
+        <li>Build failures become “background noise”</li>
+        <li>Code quality warnings pile up over time</li>
+    </ul>
+    <p>Teams may feel fixing quality issues is pointless if the backlog looks endless.</p>
+</div>
+
+<div class="slide">
+    <h2>Why Process Matters</h2>
+    <p>Consensus is essential. The process must:</p>
+    <ul>
+        <li>Be simple</li>
+        <li>Be clearly beneficial to everyone</li>
+        <li>Help developers, not burden them</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Strategy: Don't Overdo Metrics</h2>
+    <p>If code quality tools show thousands of issues:</p>
+    <ul>
+        <li>Start small — reduce the scope of tests</li>
+        <li>Focus on issues that are realistically fixable</li>
+        <li>Re-enable more tests gradually after progress is made</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Strategy: Define Clear Priorities</h2>
+    <p>Set a universal rule for the team:</p>
+    <ul>
+        <li><strong>1. Fix production issues first</strong></li>
+        <li><strong>2. Fix build errors next</strong></li>
+        <li><strong>3. Only then write new code</strong></li>
+    </ul>
+    <p><strong>No pushing new commits on top of a broken build.</strong></p>
+</div>
+
+<div class="slide">
+    <h2>Creating a Healthy Build Culture</h2>
+    <ul>
+        <li>Keep builds green as a shared responsibility</li>
+        <li>Celebrate stability and quality improvements</li>
+        <li>Make build health visible (dashboards, lamps, notifications)</li>
+    </ul>
+    <p><strong>A stable build = a stable team.</strong></p>
+</div>
+
+<div class="slide">
+    <h2>Robustness in Build Systems</h2>
+    <p>Your build server may be central to the CD pipeline, but:</p>
+    <p><strong>The process must not stop if the server goes down.</strong></p>
+    <p>Builds should be:</p>
+    <ul>
+        <li><strong>Robust</strong> — able to run reliably under different environments</li>
+        <li><strong>Repeatable</strong> — produce the same result on any host</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Portability of Builds</h2>
+    <p>Portability varies depending on the build system:</p>
+    <ul>
+        <li><strong>Maven builds</strong> are usually portable, but dependency issues can still break consistency</li>
+        <li><strong>C/C++ builds</strong> can be harder to port due to system libraries and external toolchains</li>
+        <li><strong>Missing OS-level packages</strong> often cause unpredictable failures</li>
+    </ul>
+    <p><strong>Despite the effort, improving robustness is always worth it.</strong></p>
+</div>
+
+<div class="slide">
+    <h2>Build Robustness Goals</h2>
+    <ul>
+        <li>Ensure any developer machine can run the same build</li>
+        <li>Ensure any build agent (Linux, Windows, container) can reproduce output</li>
+        <li>Keep dependency management clean and deterministic</li>
+        <li>Avoid hidden assumptions (paths, OS quirks, local configs)</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Summary of This Chapter</h2>
+    <p>In this chapter, we explored:</p>
+    <ul>
+        <li>How CI servers like Jenkins build and verify our software</li>
+        <li>The structure of Jenkins jobs, plugins, and pipelines</li>
+        <li>Challenges such as portability, robustness, build failures, and quality metrics</li>
+        <li>How DevOps teams can improve visibility and culture around build health</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Looking Ahead</h2>
+    <p>Next, we will focus on:</p>
+    <p><strong>Integrating testing into the CI/CD workflow</strong></p>
+    <p>We'll see how automated testing increases confidence and improves overall software quality.</p>
+</div>
+
+	  
+
+</body>
+</html>
