@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chapter 6 - Testing the Code</title>
+
+<style>
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    line-height:1.6;
+    margin:40px;
+    background:#f4f6f8;
+}
+
+h1{
+    color:#2c3e50;
+}
+
+h2{
+    color:#34495e;
+    margin-top:30px;
+}
+
+code{
+    background:#eee;
+    padding:4px 6px;
+    border-radius:4px;
+}
+
+pre{
+    background:#272822;
+    color:#f8f8f2;
+    padding:15px;
+    overflow:auto;
+    border-radius:6px;
+}
+
+.section{
+    background:white;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:8px;
+}
+
+ul{
+    margin-left:20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Software Testing</h1>
+<pre>
+Software Testing
+│
+├── 1. Based on Testing Method
+│   ├── 1.1 Manual Testing
+│   │     ├── Exploratory Testing
+│   │     ├── Ad-hoc Testing
+│   │     └── Usability Testing
+│   └── 1.2 Automation Testing
+│         ├── Regression Testing
+│         ├── API Automation
+│         ├── UI Automation (Selenium, Cypress)
+│         ├── Performance Testing (JMeter, K6)
+│         └── Continuous Testing (CI/CD)
+│
+├── 2. Based on Testing Levels (SDLC Phases)
+│   ├── 2.1 Unit Testing
+│   ├── 2.2 Integration Testing
+│   │     ├── Big Bang Integration
+│   │     ├── Top-Down
+│   │     ├── Bottom-Up
+│   │     └── Sandwich/Hybrid
+│   ├── 2.3 System Testing
+│   │     ├── Functional Testing
+│   │     ├── End-to-End Testing
+│   │     ├── Non-Functional Testing
+│   │     └── Recovery Testing
+│   └── 2.4 Acceptance Testing (UAT)
+│         ├── Alpha Testing
+│         └── Beta Testing
+│
+├── 3. Based on Knowledge of Internal Structure
+│   ├── 3.1 Black Box Testing
+│   │     ├── Functional Testing
+│   │     ├── System Testing
+│   │     ├── Acceptance Testing
+│   │     └── Usability Testing
+│   ├── 3.2 White Box Testing
+│   │     ├── Unit Testing
+│   │     ├── Code Coverage Testing
+│   │     ├── Path Testing
+│   │     ├── Loop Testing
+│   │     └── Security Code Analysis
+│   └── .3 Gray Box Testing
+│         ├── Integration Testing
+│         ├── API Testing
+│         ├── Database Testing
+│         └── Session/State Testing
+│
+│
+└── 4. Based on Focus Area
+    ├── 4.1 Functional Testing
+    │     ├── Smoke Testing
+    │     ├── Sanity Testing
+    │     ├── Regression Testing
+    │     ├── API Testing
+    │     └── End-to-End Testing
+    └── 4.2 Non-Functional Testing
+          ├── Performance Testing
+          │     ├── Load Testing
+          │     ├── Stress Testing
+          │     ├── Spike Testing
+          │     └── Endurance (Soak) Testing
+          ├── Security Testing
+          │     ├── Vulnerability Scanning
+          │     ├── Penetration Testing
+          │     ├── Risk Assessment
+          │     └── Authentication/Authorization Testing
+          ├── Usability Testing
+          │     └── UI/UX Evaluation
+          ├── Compatibility Testing
+          │     ├── Browser Compatibility
+          │     ├── OS Compatibility
+          │     └── Device Compatibility
+          ├── Reliability & Stability Testing
+          └── Compliance Testing
+</pre>
+
+
+<h2>Manual Testing</h2>
+<p>Performed manually by testers to identify defects without automation tools.</p>
+
+<h3>1. Exploratory Testing</h3>
+<p>Tester explores the application without predefined test cases.</p>
+
+<h3>2. Ad-hoc Testing</h3>
+<p>Unstructured testing performed randomly to find defects.</p>
+
+<h3>3. Usability Testing</h3>
+<p>Checks how user‑friendly and intuitive the interface is.</p>
+
+<h2>Automation Testing</h2>
+<p>Uses scripts and tools to automate repetitive tests.</p>
+
+<h3>1. Regression Testing</h3>
+<p>Ensures new changes do not affect existing functionality.</p>
+
+<h3>2. API Automation</h3>
+<p>Automates API test cases to validate endpoints.</p>
+
+<h3>3. UI Automation</h3>
+<p>Automates browser actions using tools like Selenium/Cypress.</p>
+
+<h3>4. Performance Testing</h3>
+<p>Measures speed, stability, and scalability.</p>
+
+<h3>5. Continuous Testing</h3>
+<p>Automated tests run continuously in CI/CD pipelines.</p>
+
+<h2>2. Based on Testing Levels (SDLC Phases)</h2>
+
+<ul>
+    <li>
+        <strong>2.1 Unit Testing</strong><br>
+        <p>Testing individual functions or components in isolation to ensure they work correctly. Usually done by developers.</p>
+    </li>
+
+    <li>
+        <strong>2.2 Integration Testing</strong><br>
+        <p>Testing interactions between integrated modules to find interface or communication defects.</p>
+
+        <ul>
+            <li>
+                <strong>Big Bang Integration</strong><br>
+                <p>All modules are integrated and tested at once. Simple but hard to debug.</p>
+            </li>
+            <li>
+                <strong>Top-Down Integration</strong><br>
+                <p>Testing begins from top modules and moves downward using stubs for lower modules.</p>
+            </li>
+            <li>
+                <strong>Bottom-Up Integration</strong><br>
+                <p>Testing starts from low-level modules upward using drivers for higher modules.</p>
+            </li>
+            <li>
+                <strong>Sandwich/Hybrid Integration</strong><br>
+                <p>Combination of top-down and bottom-up methods to test middle layers early.</p>
+            </li>
+        </ul>
+    </li>
+
+    <li>
+        <strong>2.3 System Testing</strong><br>
+        <p>Complete end-to-end testing of the entire application based on requirements.</p>
+
+        <ul>
+            <li>
+                <strong>Functional Testing</strong><br>
+                <p>Checks whether the software performs all required business functions properly.</p>
+            </li>
+
+            <li>
+                <strong>End-to-End Testing</strong><br>
+                <p>Validates full workflows across databases, APIs, UI, and integrated systems.</p>
+            </li>
+
+            <li>
+                <strong>Non-Functional Testing</strong><br>
+                <p>Evaluates performance, security, usability, scalability, and reliability.</p>
+            </li>
+
+            <li>
+                <strong>Recovery Testing</strong><br>
+                <p>Checks the system’s ability to recover from crashes, failures, or network issues.</p>
+            </li>
+        </ul>
+    </li>
+
+    <li>
+        <strong>2.4 Acceptance Testing (UAT)</strong><br>
+        <p>Final validation performed by end users or clients to ensure software meets business needs.</p>
+
+        <ul>
+            <li>
+                <strong>Alpha Testing</strong><br>
+                <p>Conducted internally to detect usability and functional defects before public release.</p>
+            </li>
+
+            <li>
+                <strong>Beta Testing</strong><br>
+                <p>Performed by real users in a real environment to gather feedback before final launch.</p>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+
+<h3>Black Box Testing</h3>
+<p>Tester knows nothing about internal code—focus on inputs and outputs.</p>
+
+<h3>White Box Testing</h3>
+<p>Tester knows code structure and validates logic paths.</p>
+
+<h3>Gray Box Testing</h3>
+<p>Tester has limited knowledge of internal structure.</p>
+
+
+<h3>Smoke Testing</h3>
+<p>Basic checks to ensure major features work.</p>
+
+<h3>Sanity Testing</h3>
+<p>Quick check after minor fixes.</p>
+
+<h3>End-to-End Testing</h3>
+<p>Validates entire workflows from start to end.</p>
+
+<h3>Load/Stress/Spike/Endurance Testing</h3>
+<p>Validates performance under different workload conditions.</p>
+
+<h3>Security Testing</h3>
+<p>Identifies vulnerabilities and security gaps.</p>
+
+<h3>Compatibility Testing</h3>
+<p>Ensures app works on different devices, OS, and browsers.</p>
+
+<h3>Reliability Testing</h3>
+<p>Ensures system performs consistently over time.</p>
+
+<h3>Compliance Testing</h3>
+<p>Ensures software follows required standards or regulations.</p>
+
+
+
+<h2>Manual Testing</h2>
+<p>Manual testing is still essential, even with automation, because tests must be run manually at least once.</p>
+
+<p>Acceptance testing is hard to automate due to unclear or complex requirements, making QA expertise vital.</p>
+
+<h3>Good manual testing depends on:</h3>
+<ul>
+    <li>Proper test data management</li>
+    <li>Ability to deploy new code quickly to verify fixes</li>
+</ul>
+
+<p>Production data may be too large or sensitive to copy directly;</p>
+
+<p>Every organization differs, so follow the KISS principle (Keep It Simple, Stupid) for effective testing processes.</p>
+
+<h2>Pros and Cons of Test Automation</h2>
+
+<p>Test automation promises higher software quality, greater confidence in releases, and reduced manual testing effort. However, in many organizations, real automation is limited due to practical challenges and human factors.</p>
+
+<h3>Key Problems</h3>
+<ul>
+    <li><strong>Low-value cheap tests:</strong> Unit tests are easy to automate but often perceived as less useful than manual testing.</li>
+    <li><strong>Difficulty creating realistic test environments:</strong> Integration test environments require hardware, licensing, and resources, making automation harder.</li>
+    <li><strong>Tests need frequent updates:</strong> As software changes, tests must be maintained, creating a feeling that automation increases workload.</li>
+    <li><strong>Lack of DevOps culture:</strong> Poor collaboration between developers and operations leads to low responsibility for failing tests.</li>
+    <li><strong>Unreliable tests:</strong> Flaky tests cause developers to disable them, leading to ignored build failures.</li>
+    <li><strong>Writing good automated tests is hard:</strong> High-quality integration tests require deep system understanding.</li>
+</ul>
+
+<h3>Overall Insight</h3>
+<p>Most challenges come from people, perceptions, and team dynamics rather than technology alone.</p>
+
+<h3>Recommended Strategy</h3>
+<ul>
+    <li>Leverage enthusiasm for test automation</li>
+    <li>Avoid unrealistic goals</li>
+    <li>Adopt incremental improvements</li>
+</ul>
+
+<h2>Unit Testing – Summary</h2>
+
+<p>Unit testing focuses on testing small, well-defined parts of a system in isolation. This makes the tests easier to write, run, and maintain. Build tools like Maven provide built-in support for organizing, running, and reporting unit tests, usually through simple conventions and annotations.</p>
+
+<p>Although unit and functional tests may use similar tools or libraries, their purposes differ, so it’s important to ensure you're writing the correct type of test for the situation.</p>
+
+<h3>xUnit and JUnit</h3>
+<p>JUnit is a popular unit-testing framework for Java and part of the broader xUnit family of testing frameworks. Variants exist for many languages, such as NUnit for C#. JUnit enables developers to define and run tests easily.</p>
+
+<h3>Key JUnit Concepts</h3>
+<ul>
+    <li><strong>Test Runner:</strong> Executes tests and collects results (e.g.,command line, Maven Surefire).</li>
+    <li><strong>Test Case:</strong> A single test definition, usually created using annotations such as <code>@Test</code>. Surefire also locates test classes that have the Test suffix in the class name</li>
+    <li><strong>Test Fixture:</strong> A fixed setup (environment + data) that your test needs before it runs.</li>
+	<p>In JUnit, we use annotations:</p>
+	<ul> <li>	
+🔹 @Before
+<ul> <li>Runs before each test
+<li>Used to setup environment</ul>
+<li>🔹 @After
+<ul> <li>Runs after each test
+<li>Used to clean/reset environment</ul>
+	</ul>
+	<code><pre>import org.junit.*;
+
+public class CalculatorTest {
+
+    Calculator calc;
+
+    @Before
+    public void setup() {
+        calc = new Calculator();  // create fresh object
+        System.out.println("Setup done");
+    }
+
+    @Test
+    public void testAddition() {
+        int result = calc.add(2, 3);
+        Assert.assertEquals(5, result);
+    }
+
+    @Test
+    public void testSubtraction() {
+        int result = calc.subtract(5, 2);
+        Assert.assertEquals(3, result);
+    }
+
+    @After
+    public void teardown() {
+        calc = null;  // cleanup
+        System.out.println("Cleanup done");
+    }
+}</pre></code>
+    <li><strong>Test Suite:</strong> A group of related test cases sharing similar fixtures.</li>
+	<code><pre>import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+
+// This tells JUnit to run this class as a test suite
+@RunWith(Suite.class)
+
+// List of test classes to include in the suite
+@Suite.SuiteClasses({
+    CalculatorTest.class,
+    AdvancedCalculatorTest.class
+})
+
+// Empty class – used only as a holder for annotations
+public class AllTests {
+}
+</pre></code>
+    <li><strong>Test Execution:</strong> Running test cases (or test suites), setting up required data (fixtures), and checking results.</li>
+<p>When you run AllTests.java(your test suite file)</p><code><pre>Setup done
+Cleanup done
+Setup done
+Cleanup done
+
+Tests run: 2, Failures: 0
+</pre></code>
+    <li><strong>Test Result Formatter:</strong> Formats test results (typically in XML) for tools like Jenkins.</li>
+<h4>JUnit Test Result</h4>
+
+<pre>
+&lt;testsuite name="CalculatorTest" tests="2" failures="1"&gt;
+    
+    &lt;testcase name="testAdd" classname="CalculatorTest"/&gt;
+    
+    &lt;testcase name="testSub" classname="CalculatorTest"&gt;
+        &lt;failure message="expected 2 but was 3"/&gt;
+    &lt;/testcase&gt;
+
+&lt;/testsuite&gt;
+</pre>
+<p>Converts test execution results into a structured format (usually XML) so that tools like Jenkins can read and display them.</p>
+
+    <li><strong>Assertions:</strong> Statements that validate conditions during tests, such as <code>assertEquals()</code>, <code>assertTrue()</code>, and <code>assertFalse()</code>.</li>
+</ul>
+
+<p>JUnit integrates smoothly with Java build tools and provides a strong foundation for effective automated unit testing.</p>
+
+<h1>Chapter 6 – Testing the Code</h1>
+
+<div class="section">
+
+<p>
+In modern software development, releasing code frequently requires strong confidence in the quality of the software.  
+To achieve this, developers rely heavily on <b>automated testing</b>. Testing ensures that software works correctly and that new changes do not break existing functionality.
+</p>
+
+<p>
+This chapter introduces several testing techniques and tools used in DevOps environments such as:
+</p>
+
+<ul>
+<li>Manual Testing</li>
+<li>Unit Testing using JUnit</li>
+<li>Integration Testing</li>
+<li>GUI Testing using Selenium</li>
+<li>Performance Testing using JMeter</li>
+<li>Behavior Driven Development using Cucumber</li>
+<li>Running automated tests using Jenkins CI</li>
+</ul>
+
+</div>
+
+<div class="section">
+
+<h2>1. Manual Testing</h2>
+
+<p>
+Manual testing is the traditional method where testers execute test cases manually without using automation tools.
+Although automation is powerful, manual testing is still necessary, especially for:
+</p>
+
+<ul>
+<li>Acceptance testing</li>
+<li>User interface evaluation</li>
+<li>Exploratory testing</li>
+</ul>
+
+<h3>Best Practices for Manual Testing</h3>
+
+<ul>
+<li>Maintain consistent test data</li>
+<li>Deploy new builds quickly for verification</li>
+<li>Protect sensitive user data in test environments</li>
+<li>Keep testing processes simple (KISS principle)</li>
+</ul>
+
+</div>
+
+
+<div class="section">
+
+<h2>2. Pros and Cons of Test Automation</h2>
+
+<h3>Advantages</h3>
+
+<ul>
+<li>Improves software quality</li>
+<li>Faster testing cycles</li>
+<li>Supports Continuous Integration and Continuous Delivery</li>
+<li>Reduces repetitive manual testing</li>
+</ul>
+
+<h3>Challenges</h3>
+
+<ul>
+<li>Writing automated tests requires effort</li>
+<li>Test environments can be difficult to configure</li>
+<li>Tests may break when software changes</li>
+<li>Integration tests require complex infrastructure</li>
+</ul>
+
+<p>
+To succeed with automation, teams should:
+</p>
+
+<ul>
+<li>Start small</li>
+<li>Work incrementally</li>
+<li>Encourage collaboration between developers and operations teams</li>
+</ul>
+
+</div>
+
+
+<div class="section">
+
+<h2>3. Unit Testing</h2>
+
+<p>
+Unit testing focuses on testing individual components of an application in isolation.
+It is usually written by developers and is one of the easiest types of tests to automate.
+</p>
+
+<p>
+Java developers commonly use the <b>JUnit</b> framework for unit testing.
+</p>
+
+<h3>Example JUnit Assertions</h3>
+
+<pre>
+assertEquals(str1, str2);
+assertTrue(val1 < val2);
+assertFalse(val1 > val2);
+</pre>
+
+<h3>Example Unit Test</h3>
+
+<pre>
+import static org.junit.Assert.*;
+import org.junit.Test;
+
+public class CalculatorTest {
+
+    @Test
+    public void testAddition(){
+        int result = 2 + 3;
+        assertEquals(5, result);
+    }
+}
+</pre>
+
+</div>
+
+
+<div class="section">
+
+<h3>Key JUnit Concepts</h3>
+<ul>
+    <li><strong>Test Runner:</strong> Executes tests and collects results (e.g.,command line, Maven Surefire).</li>
+    <li><strong>Test Case:</strong> A single test definition, usually created using annotations such as <code>@Test</code>. Surefire also locates test classes that have the Test suffix in the class name</li>
+    <li><strong>Test Fixture:</strong> A fixed setup (environment + data) that your test needs before it runs.</li>
+	<p>In JUnit, we use annotations:</p>
+	<ul> <li>	
+🔹 @Before
+<ul> <li>Runs before each test
+<li>Used to setup environment</ul>
+<li>🔹 @After
+<ul> <li>Runs after each test
+<li>Used to clean/reset environment</ul>
+	</ul>
+	<code><pre>import org.junit.*;
+
+public class CalculatorTest {
+
+    Calculator calc;
+
+    @Before
+    public void setup() {
+        calc = new Calculator();  // create fresh object
+        System.out.println("Setup done");
+    }
+
+    @Test
+    public void testAddition() {
+        int result = calc.add(2, 3);
+        Assert.assertEquals(5, result);
+    }
+
+    @Test
+    public void testSubtraction() {
+        int result = calc.subtract(5, 2);
+        Assert.assertEquals(3, result);
+    }
+
+    @After
+    public void teardown() {
+        calc = null;  // cleanup
+        System.out.println("Cleanup done");
+    }
+}</pre></code>
+    <li><strong>Test Suite:</strong> A group of related test cases sharing similar fixtures.</li>
+	<code><pre>import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+
+// This tells JUnit to run this class as a test suite
+@RunWith(Suite.class)
+
+// List of test classes to include in the suite
+@Suite.SuiteClasses({
+    CalculatorTest.class,
+    AdvancedCalculatorTest.class
+})
+
+// Empty class – used only as a holder for annotations
+public class AllTests {
+}
+</pre></code>
+    <li><strong>Test Execution:</strong> Running test cases (or test suites), setting up required data (fixtures), and checking results.</li>
+<p>When you run AllTests.java(your test suite file)</p><code><pre>Setup done
+Cleanup done
+Setup done
+Cleanup done
+
+Tests run: 2, Failures: 0
+</pre></code>
+    <li><strong>Test Result Formatter:</strong> Formats test results (typically in XML) for tools like Jenkins.</li>
+<h4>JUnit Test Result</h4>
+
+<pre>
+&lt;testsuite name="CalculatorTest" tests="2" failures="1"&gt;
+    
+    &lt;testcase name="testAdd" classname="CalculatorTest"/&gt;
+    
+    &lt;testcase name="testSub" classname="CalculatorTest"&gt;
+        &lt;failure message="expected 2 but was 3"/&gt;
+    &lt;/testcase&gt;
+
+&lt;/testsuite&gt;
+</pre>
+<p>Converts test execution results into a structured format (usually XML) so that tools like Jenkins can read and display them.</p>
+
+    <li><strong>Assertions:</strong> Statements that validate conditions during tests, such as <code>assertEquals()</code>, <code>assertTrue()</code>, and <code>assertFalse()</code>.</li>
+</ul>
+
+<p>JUnit integrates smoothly with Java build tools and provides a strong foundation for effective automated unit testing.</p>
+
+</div>
+
+
+<div class="section">
+
+<h2>5. Mocking</h2>
+
+<p>
+Mocking allows developers to simulate external systems during testing.
+Instead of connecting to real services (like databases), tests use mock objects.
+</p>
+
+<p>
+A popular Java mocking framework is <b>Mockito</b>.
+</p>
+
+<h3>Example</h3>
+
+<pre>
+List mockedList = mock(List.class);
+when(mockedList.get(0)).thenReturn("Hello");
+
+assertEquals("Hello", mockedList.get(0));
+</pre>
+
+</div>
+
+
+<div class="section">
+
+<h2>6. Test Coverage</h2>
+
+<p>
+Test coverage measures the percentage of code executed during testing.</p>
+<p>Suppose your program has 100 lines of code:<br>
+
+Your tests execute 80 lines<br>
+
+👉 Test Coverage = 80%</p>
+<p>
+Higher coverage usually indicates better testing, but 100% coverage is not always necessary.
+</p>
+
+<p>
+Tools used for measuring coverage include:
+</p>
+
+<ul>
+<li>Cobertura</li>
+<li>Clover</li>
+<li>JaCoCo</li>
+</ul>
+<p>How Cobertura Works (Simple Idea)<br>
+
+👉 It modifies your compiled code (bytecode) by inserting extra instructions.<br>
+
+So internally:<br>
+
+<code>Your Code → Modified Code → Run Tests → Track execution</code><br>
+
+👉 These extra instructions:<br>
+
+Count which lines are executed<br>
+Generate coverage report</p>
+
+<p>Does 100% Coverage Mean Perfect Code?(Coverage ≠ Quality) <br>
+
+You can have:<br>
+
+High coverage ❌ but useless tests<br>
+Lower coverage ✅ but meaningful tests<br>
+
+<h2>💻 Example 1: Useless Coverage</h2>
+
+<pre>
+private int positiveValue;
+
+void setPositiveValue(int x){
+    this.positiveValue = x;
+}
+
+int getPositiveValue(){
+    return positiveValue;
+}
+</pre>
+
+<h3>Test Case:</h3>
+
+<pre>
+@Test
+public void testGetter() {
+    Calculator c = new Calculator();
+    c.setPositiveValue(10);
+    assertEquals(10, c.getPositiveValue());
+}
+</pre>
+
+<p class="note">👉 Result:</p>
+<ul>
+    <li class="good">Coverage increases ✔</li>
+    <li>But what are we testing? ❓</li>
+</ul>
+
+<p>👉 Just checking: <b>Java assigns values correctly</b></p>
+
+<p class="bad">👉 Not very useful ❌</p>
+
+<hr>
+
+<h2>💡 Example 2: Meaningful Testing</h2>
+
+<p>Now improve the setter:</p>
+
+<pre>
+void setPositiveValue(int x){
+    if(x < 0){
+        throw new IllegalArgumentException("Negative not allowed");
+    }
+    this.positiveValue = x;
+}
+</pre>
+
+<h3>Test Cases:</h3>
+
+<pre>
+@Test
+public void testValidValue() {
+    obj.setPositiveValue(10);
+    assertEquals(10, obj.getPositiveValue());
+}
+
+@Test(expected = IllegalArgumentException.class)
+public void testNegativeValue() {
+    obj.setPositiveValue(-5);
+}
+</pre>
+
+<p class="note">👉 Now testing:</p>
+<ul>
+    <li class="good">Logic ✔</li>
+    <li class="good">Validation ✔</li>
+    <li class="good">Error handling ✔</li>
+</ul>
+
+<p class="good">👉 This is useful testing ✔</p>
+</div>
+
+
+<div class="section">
+
+<section>
+
+<h2>Automated Integration Testing</h2>
+
+<p>
+Automated integration testing checks how different components of a system work together. 
+It is similar to unit testing in terms of tools and frameworks, but the key difference is that 
+it uses <b>real systems instead of mocks</b>.
+</p>
+
+<ul>
+<li>Unit testing → uses <b>mock data</b></li>
+<li>Integration testing → uses <b>real databases, APIs, or services</b></li>
+<li>Ensures components interact correctly</li>
+<li>Can be executed using the same test runners (e.g., Maven, JUnit)</li>
+</ul>
+
+<p>
+For example, instead of mocking a database, an integration test connects to a real database. 
+This makes testing more realistic but also more complex.
+</p>
+
+<ul>
+<li>Requires <b>predictable and repeatable data</b></li>
+<li>May use <b>production data copies</b> (after cleaning sensitive data)</li>
+<li>Needs proper setup like <b>database backup and restore</b></li>
+</ul>
+
+</section>
+
+</div>
+
+
+<div class="section">
+
+<section>
+
+<h2>Docker in Automated Testing</h2>
+
+<p>
+Docker helps create consistent and isolated environments for integration testing. 
+It allows you to simulate real systems using containers.
+</p>
+
+<ul>
+<li>Run multiple services (app, database) in containers</li>
+<li>Simulate real production-like environments</li>
+<li>Reset systems easily to a known state</li>
+<li>Use <b>Docker Compose</b> to manage multiple containers</li>
+</ul>
+
+<p>
+Example: You can run a database container and an application container together 
+and test how they communicate.
+</p>
+
+<ul>
+<li>Jenkins can start/stop Docker containers during CI</li>
+<li>Helps automate full system testing</li>
+<li>Reproducible environments</li>
+<li>Easy environment reset</li>
+<li>Simulating distributed systems</li>
+</ul>
+
+<p>
+However, challenges exist:
+</p>
+
+<ul>
+<li>Hard to detect when services are fully started</li>
+<li>May require scripts (polling logs, checking ports)</li>
+<li>Some setup can be complex</li>
+</ul>
+
+</section>
+
+<section>
+
+<h2>Arquillian</h2>
+
+<p>
+Arquillian is a testing tool designed for Java applications that helps perform 
+tests closer to real production environments.
+</p>
+
+<ul>
+<li>Used for testing Java application servers (e.g., WildFly)</li>
+<li>Bridges the gap between unit testing and integration testing</li>
+<li>Deploys code inside the application server for testing</li>
+</ul>
+
+<p>
+The main idea of Arquillian is to test applications in an environment that closely 
+resembles the real system.
+</p>
+
+<ul>
+<li>Provides more realistic results than mocking</li>
+<li>Helps detect issues that occur only in real environments</li>
+<li>Involves trade-offs like setup complexity</li>
+</ul>
+
+<p>
+Overall, Arquillian shows how testing can move closer to real-world conditions, 
+improving software reliability.
+</p>
+
+</section>
+
+
+</div>
+
+
+<div class="section">
+
+<section>
+
+<h2>Performance Testing</h2>
+
+<p>
+Performance testing is used to evaluate how a system behaves under different workloads. 
+It is especially important for <b>large-scale applications and public websites</b> where many users access the system simultaneously.
+</p>
+
+<p>
+To get accurate results, performance testing should be done in an environment that is 
+as close as possible to the <b>production system</b>.
+</p>
+
+</section>
+
+
+<section>
+
+<h3>Load Testing</h3>
+
+<p>
+The most common type of performance testing is <b>load testing</b>.
+</p>
+
+<ul>
+<li>Simulates multiple users sending requests to the system</li>
+<li>Measures <b>response time</b>, throughput, and errors</li>
+<li>Helps identify system bottlenecks</li>
+</ul>
+
+<p>
+In load testing, artificial (synthetic) requests are generated to check how the server 
+handles high traffic.
+</p>
+
+</section>
+
+
+<section>
+
+<h3>Apache JMeter</h3>
+
+<p>
+<b>Apache JMeter</b> is a popular open-source tool used for performance testing.
+</p>
+
+<ul>
+<li>Generates heavy load on servers</li>
+<li>Measures response times and performance metrics</li>
+<li>Supports multiple protocols such as:</li>
+<ul>
+    <li>HTTP</li>
+    <li>LDAP</li>
+    <li>SOAP</li>
+    <li>JDBC</li>
+</ul>
+</ul>
+
+<p>
+Although simpler than tools like LoadRunner, JMeter is powerful and widely used.
+</p>
+
+</section>
+
+
+<section>
+
+<h3>Integration with Build Tools and CI</h3>
+
+<p>
+JMeter can be integrated into modern development workflows:
+</p>
+
+<ul>
+<li>Use <b>Maven plugin</b> to run performance tests during build</li>
+<li>Run tests automatically in <b>Jenkins CI server</b></li>
+<li>Use Jenkins <b>performance plugin</b> to execute and analyze results</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Performance Testing Workflow</h3>
+
+<p>
+A typical performance testing process in CI/CD looks like this:
+</p>
+
+<ul>
+<li>Build the application</li>
+<li>Deploy it to a <b>test environment</b> (similar to production)</li>
+<li>Run JMeter test scenarios</li>
+<li>Collect and analyze performance data</li>
+</ul>
+
+<p>
+This helps teams predict how the application will behave in real-world conditions 
+and ensures that it can handle expected user traffic.
+</p>
+
+</section>
+
+</div>
+
+
+<div class="section">
+
+<section>
+
+<h2>Automated Acceptance Testing</h2>
+
+<p>
+Automated acceptance testing ensures that the software works correctly from the 
+<b>end user's perspective</b>. It verifies whether the system meets business requirements 
+and user expectations.
+</p>
+
+<p>
+One popular tool for this is <b>Cucumber</b>, which follows 
+<b>Behavior-Driven Development (BDD)</b>.
+</p>
+
+<ul>
+<li>Tests are written in <b>plain English-like language</b></li>
+<li>Easy for <b>non-programmers (testers, product owners)</b> to understand</li>
+<li>Bridges the gap between developers and business teams</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>How Cucumber Works</h3>
+
+<p>
+Cucumber uses <b>feature files</b> written in a language called <b>Gherkin</b>.
+These files describe application behavior in a readable format.
+</p>
+
+<ul>
+<li><b>Feature</b> → What we want to test</li>
+<li><b>Scenario</b> → Specific test case</li>
+<li><b>Steps</b> → Actions and expected results</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Example Feature File</h3>
+
+<pre>
+Feature: Addition 
+  I would like to add numbers with my pocket calculator 
+
+  Scenario: Integer numbers 
+    * I have entered 4 into the calculator 
+    * I press add 
+    * I have entered 2 into the calculator 
+    * I press equal 
+    * The result should be 6 on the screen 
+</pre>
+
+<p>
+This description is easy to understand even for non-technical users.
+</p>
+
+</section>
+
+
+<section>
+
+<h3> Java Example : If you use the Java 8 lambda version of Cucumber, a test step could look somewhat like this</h3>
+
+<pre>
+Calculator calc;
+
+public MyStepdefs() {
+
+  Given("I have entered (\\d+) into the calculator", (Integer i) -> {
+    calc.push(i);
+  });
+
+  When("I press (\\w+)", (String op) -> {
+    calc.op(op);
+  });
+
+  Then("The result should be (\\d+)", (Integer i) -> {
+    assertThat(calc.result(), i);
+  });
+}
+</pre>
+
+<p>
+Here, each step in the feature file is mapped to Java code using 
+<b>regular expressions</b>.
+</p>
+
+</section>
+
+
+<section>
+
+<h3>Advantages</h3>
+
+<ul>
+<li>Readable and easy to understand</li>
+<li>Encourages collaboration between teams</li>
+<li>Focuses on user behavior, not just code</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Challenges</h3>
+
+<ul>
+<li>Feature files must be written in a <b>structured format</b></li>
+<li>Requires matching steps using <b>regular expressions</b></li>
+<li>Small wording changes can break test code</li>
+<li>Sometimes developers end up writing everything</li>
+</ul>
+
+</section>
+
+</div>
+
+<div class="section">
+    <section>
+
+<h2>Automated GUI Testing</h2>
+
+<p>
+Automated GUI (Graphical User Interface) testing is used to test how users interact 
+with an application’s interface. While it provides many benefits, it is also 
+<b>challenging to maintain</b> because user interfaces frequently change during development.
+</p>
+
+<ul>
+<li>UI elements (buttons, fields) may move or change</li>
+<li>Tests can easily break due to small UI updates</li>
+<li>Maintenance effort can be high</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Problems with Older GUI Testing Tools</h3>
+
+<p>
+Earlier GUI testing tools worked by simulating mouse clicks on fixed screen positions.
+</p>
+
+<ul>
+<li>If a button moved → test failed</li>
+<li>Tests were <b>fragile and unreliable</b></li>
+<li>Frequent UI changes increased maintenance cost</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Selenium (Modern Approach)</h3>
+
+<p>
+<b>Selenium</b> is a widely used web GUI testing tool that solves many of these problems.
+Instead of clicking based on position, it interacts with elements using the 
+<b>DOM (Document Object Model)</b>.
+</p>
+
+<ul>
+<li>Find elements using <b>IDs, names, CSS selectors</b></li>
+<li>More stable than coordinate-based testing</li>
+<li>Works with multiple browsers</li>
+<li>Supports automation through code</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre>
+WebDriver driver = new FirefoxDriver();
+driver.get("http://example.com");
+
+driver.findElement(By.id("login")).click();
+</pre>
+
+</section>
+
+
+<section>
+
+<h3>Sikuli (Alternative Approach)</h3>
+
+<p>
+<b>Sikuli</b> is another GUI testing tool that uses <b>image recognition</b>.
+It is based on OpenCV and identifies UI elements visually.
+</p>
+
+<ul>
+<li>Works even if UI elements move</li>
+<li>Useful for <b>desktop applications and games</b></li>
+<li>Relies on screenshots instead of DOM</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Conclusion</h3>
+
+<p>
+Automated GUI testing is powerful but requires careful design. Tools like 
+<b>Selenium</b> and <b>Sikuli</b> provide different approaches:
+</p>
+
+<ul>
+<li>Selenium → best for <b>web applications</b></li>
+<li>Sikuli → best for <b>visual or desktop applications</b></li>
+</ul>
+
+<p>
+Choosing the right tool depends on your application and testing needs.
+</p>
+
+</section>
+</div>
+
+<div class="section">
+    <section>
+
+<h2>Integrating Selenium Tests in Jenkins</h2>
+
+<p>
+Selenium automates browser actions by opening a browser, loading your application, 
+and interacting with elements using the <b>DOM (Document Object Model)</b>.
+</p>
+
+<ul>
+<li>Tests can be created by recording actions or writing code</li>
+<li>Usually written using Selenium API (preferred)</li>
+<li>Executed in CI tools like <b>Jenkins</b></li>
+</ul>
+
+<p>
+One challenge is that Jenkins servers are often <b>headless</b> (no UI). 
+So we must configure browsers and drivers properly.
+</p>
+
+</section>
+
+<section>
+
+<h2>Simple Selenium Example with Node.js</h2>
+
+<p>
+We will test a simple Node.js application that returns the sum of two numbers (2 + 3 = 5).
+</p>
+
+</section>
+
+
+<section>
+
+<h3>Step 1: Node.js Application</h3>
+
+<pre>
+// server.js
+const express = require('express');
+const add = require('./math');
+
+const app = express();
+
+app.get('/', (req, res) => {
+  const sum = add(2, 3);
+  res.send(`Sum is: ${sum}`);
+});
+
+app.listen(8080, () => {
+  console.log("Server running on port 8080");
+});
+</pre>
+
+<p>math.js</p>
+
+<pre>
+// math.js
+function add(a, b){
+  return a + b;
+}
+
+module.exports = add;
+</pre>
+
+<p>Run the server:</p>
+<pre>node server.js</pre>
+
+</section>
+
+
+<section>
+
+<h3>Step 2: Simple Selenium Test</h3>
+
+<pre>
+// test.js
+const { Builder, By } = require('selenium-webdriver');
+
+(async function testApp() {
+
+  let driver = await new Builder().forBrowser('chrome').build();
+
+  try {
+    await driver.get("http://localhost:8080");
+
+    let bodyText = await driver.findElement(By.tagName("body")).getText();
+
+    if(bodyText.includes("Sum is: 5")){
+      console.log("Test Passed ✔");
+    } else {
+      console.log("Test Failed ❌");
+    }
+
+  } finally {
+    await driver.quit();
+  }
+
+})();
+</pre>
+
+<p>Run the test:</p>
+<pre>node test.js</pre>
+
+</section>
+
+
+<section>
+
+<h3>What This Test Does</h3>
+
+<ul>
+<li>Opens Chrome browser</li>
+<li>Loads your Node.js app</li>
+<li>Reads page content</li>
+<li>Checks if output is <b>"Sum is: 5"</b></li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Jenkins Usage</h3>
+
+<pre>
+node server.js &
+node test.js
+</pre>
+
+<p>Include above two commands in jenkins pipeline in testing stage.</p>
+
+<p>
+Jenkins runs the test and shows pass/fail output.
+</p>
+
+</section>
+</div>
+
+<div class="section">
+    <section>
+
+<h2>JavaScript Testing</h2>
+
+<p>
+Since most modern applications have web interfaces, JavaScript testing frameworks 
+are very important for ensuring frontend and backend correctness.
+</p>
+
+<ul>
+<li><b>Karma</b> → Test runner for executing JavaScript unit tests</li>
+<li><b>Jasmine</b> → Behavior-driven testing framework (similar to Cucumber)</li>
+<li><b>Protractor</b> → End-to-end testing framework for Angular applications</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Protractor</h3>
+
+<p>
+Protractor is similar to Selenium but specifically designed for <b>Angular applications</b>.
+</p>
+
+<ul>
+<li>Built on top of <b>Selenium WebDriver</b></li>
+<li>Supports writing tests in JavaScript</li>
+<li>Understands Angular-specific features automatically</li>
+</ul>
+
+<p>
+Unlike Selenium, Protractor has built-in knowledge of Angular’s 
+<b>model-view structure</b>, making it easier to locate elements and 
+handle dynamic content.
+</p>
+
+<ul>
+<li>Automatically waits for Angular tasks to finish</li>
+<li>Provides special methods to interact with Angular components</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Why Not Only Selenium?</h3>
+
+<p>
+Although Selenium can test any web application, Protractor simplifies testing 
+for Angular apps because it understands Angular internals.
+</p>
+
+<ul>
+<li>Selenium → General-purpose testing</li>
+<li>Protractor → Angular-specific optimization</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h2>Jest Example (Unit Testing)</h2>
+
+<p>
+Jest is a popular JavaScript testing framework used for unit testing. 
+Let us test the same <b>add function</b> used in our Node.js example.
+</p>
+
+<p>math.js</p>
+
+<pre>
+// math.js
+function add(a, b){
+  return a + b;
+}
+
+module.exports = add;
+</pre>
+
+<p>math.test.js</p>
+
+<pre>
+// math.test.js
+const add = require('./math');
+
+test('adds 2 + 3 to equal 5', () => {
+  expect(add(2, 3)).toBe(5);
+});
+</pre>
+
+<p>Install and run Jest:</p>
+
+<pre>
+npm install --save-dev jest
+"scripts": {
+  "test": "jest"
+}
+npm test
+</pre>
+
+</section>
+
+
+<section>
+
+<h3>What This Test Does</h3>
+
+<ul>
+<li>Calls the function <b>add(2, 3)</b></li>
+<li>Checks if result equals <b>5</b></li>
+<li>If correct → Test passes ✔</li>
+<li>If wrong → Test fails ❌</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Conclusion</h3>
+
+<ul>
+<li>Karma and Jasmine → Unit and behavior testing</li>
+<li>Protractor → Angular-specific end-to-end testing</li>
+<li>Jest → Simple and powerful unit testing tool</li>
+</ul>
+
+<p>
+Using these tools together helps ensure that JavaScript applications are 
+reliable and maintainable.
+</p>
+
+</section>
+</div>
+
+<div class="section">
+    <section>
+
+<h2>Testing Backend Integration Points</h2>
+
+<p>
+Backend integration testing focuses on testing server-side components such as 
+<b>REST APIs and SOAP services</b>. These tests verify that different backend 
+systems communicate and work correctly together.
+</p>
+
+<ul>
+<li>Tests APIs instead of UI</li>
+<li>More stable than GUI tests</li>
+<li>Requires less maintenance</li>
+<li>Cost-effective and faster to execute</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Why Backend Testing is Important</h3>
+
+<p>
+Backend interfaces (APIs) usually change less frequently compared to user interfaces. 
+This makes backend testing more reliable and easier to maintain.
+</p>
+
+<ul>
+<li>Ensures correct data exchange between systems</li>
+<li>Validates business logic</li>
+<li>Detects integration issues early</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>SoapUI Tool</h3>
+
+<p>
+<b>SoapUI</b> is a popular tool used for testing web services such as REST and SOAP APIs.
+It provides both a graphical interface and command-line support.
+</p>
+
+<ul>
+<li>Create and run API test cases easily</li>
+<li>Supports REST and SOAP services</li>
+<li>Allows incremental test development</li>
+<li>Provides structured test environment</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Usage in Different Roles</h3>
+
+<ul>
+<li><b>Testers</b> → Use GUI to create and run test cases</li>
+<li><b>Developers</b> → Integrate tests using Maven or command line</li>
+<li><b>DevOps Engineers</b> → Run tests in CI tools like Jenkins</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>CI/CD Integration</h3>
+
+<p>
+SoapUI tests can be integrated into build pipelines:
+</p>
+
+<ul>
+<li>Run tests using <b>Maven plugins</b></li>
+<li>Execute tests from <b>command line</b></li>
+<li>Automate testing in <b>Jenkins CI server</b></li>
+</ul>
+
+<p>
+This ensures backend APIs are tested automatically whenever code changes.
+</p>
+
+</section>
+
+
+<section>
+
+<h3>Advantages</h3>
+
+<ul>
+<li>Stable and reliable testing</li>
+<li>Easy to automate</li>
+<li>Works well in CI/CD pipelines</li>
+<li>Open-source version available</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Limitations</h3>
+
+<ul>
+<li>GUI can be complex for beginners</li>
+<li>Some advanced features are paid</li>
+<li>Requires understanding of APIs (JSON/XML)</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Conclusion</h3>
+
+<p>
+Backend integration testing is an efficient way to ensure that APIs and services 
+work correctly. Tools like <b>SoapUI</b> make it easy to create, run, and automate 
+these tests, making them an essential part of modern DevOps pipelines.
+</p>
+
+</section>
+</div>
+
+<div class="section">
+
+<section>
+
+<h2>Test-Driven Development (TDD)</h2>
+
+<p>
+Test-Driven Development (TDD) is a software development approach where 
+<b>tests are written before the actual code</b>. It became popular as part of 
+<b>Extreme Programming (XP)</b> in the 1990s.
+</p>
+
+<p>
+TDD focuses on understanding requirements first and ensuring correctness 
+through continuous testing.
+</p>
+
+</section>
+
+
+<section>
+
+<h3>TDD Cycle (Steps)</h3>
+
+<ul>
+<li><b>1. Write the Test</b><br>
+Start by writing a test based on requirements, use cases, or user stories.</li>
+
+<li><b>2. Run the Test (Fail)</b><br>
+Execute the test. It should fail because the feature is not implemented yet.</li>
+
+<li><b>3. Write Code</b><br>
+Write the minimum code required to make the test pass.</li>
+
+<li><b>4. Run All Tests</b><br>
+Ensure the new test and existing tests all pass (no regression).</li>
+
+<li><b>5. Refactor</b><br>
+Improve and clean the code without changing its behavior.</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Key Ideas</h3>
+
+<ul>
+<li>Focus on <b>requirements before coding</b></li>
+<li>Write <b>small, testable units</b></li>
+<li>Ensure <b>continuous validation</b></li>
+<li>Maintain high code quality</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Advantages</h3>
+
+<ul>
+<li>Produces reliable and bug-free code</li>
+<li>Improves understanding of requirements</li>
+<li>Creates strong test suites for CI/CD</li>
+<li>Supports safe refactoring</li>
+</ul>
+
+</section>
+
+
+<section>
+
+<h3>Conclusion</h3>
+
+<p>
+TDD is a powerful development practice that integrates well with DevOps. 
+Although it requires discipline, it results in better design, cleaner code, 
+and automated tests that can be used in continuous integration pipelines.
+</p>
+
+</section>
+
+</div>
+
+<div class="section">
+<h2>REPL-Driven Development</h2>
+
+<p>
+REPL-driven development is a programming style commonly used with interpreted languages such as 
+<b>Python, Ruby, JavaScript, and Lisp</b>. REPL stands for <b>Read–Eval–Print–Loop</b>, which allows 
+developers to write and execute code interactively.
+</p>
+
+<ul>
+<li>Developers write <b>small and independent functions</b>.</li>
+<li>Functions should avoid or minimize <b>global state and side effects</b>.</li>
+<li>Each function can be <b>tested immediately</b> while writing it in the REPL environment.</li>
+<li>This helps in <b>quick debugging and better understanding</b> of the code.</li>
+</ul>
+
+<p>
+This approach differs slightly from <b>Test-Driven Development (TDD)</b>. In TDD, tests are written 
+before the actual code is implemented. In REPL-driven development, the focus is on writing simple, 
+testable functions and verifying them interactively.
+</p>
+
+<ul>
+<li>Encourages writing <b>clean and modular code</b>.</li>
+<li>Works well with <b>unit testing frameworks</b>.</li>
+<li>Helps developers build and test logic incrementally.</li>
+</ul>
+
+<p>
+Combining REPL-driven development with unit testing can create a highly effective and efficient 
+development process.
+</p>
+
+</div>
+
+
+<div class="section">
+
+<h2>13. Complete Testing Pipeline</h2>
+
+<p>
+In a typical DevOps pipeline, tests run in the following order:
+</p>
+
+<ol>
+<li>Unit Tests</li>
+<li>Integration Tests</li>
+<li>API Tests</li>
+<li>GUI Tests</li>
+<li>Performance Tests</li>
+</ol>
+
+<p>
+These tests are executed automatically using a CI server like <b>Jenkins</b>.
+</p>
+
+</div>
+
+
+<div class="section">
+
+<h2>Summary</h2>
+
+<p>
+Software testing is essential for delivering reliable software.  
+By combining different testing strategies such as unit testing, integration testing, GUI testing, and performance testing, teams can ensure high software quality.
+</p>
+
+<p>
+Modern DevOps pipelines integrate these tests with CI/CD systems like Jenkins, enabling continuous testing and faster software delivery.
+</p>
+
+</div>
+
+</body>
+</html>
