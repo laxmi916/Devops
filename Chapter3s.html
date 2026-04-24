@@ -99,7 +99,7 @@
 <li> Rollbacks are <b>rare</b>, not normal</li></ul>
 
 
-
+<hr>
  <h2>3. The Monolithic Architecture Problem</h2>
 
  <h3>What is a Monolith?</h3>
@@ -125,45 +125,6 @@
 <li> High stress, slow deployments, higher risk</li></ul>
 
 <p><b>👉 Monoliths slow down Continuous Delivery</b></p>
-
-
-
- <h2>4. Key Design Rule: Separation of Concerns</h2>
-
-<p>Proposed by <b>Edsger Dijkstra</b></p>
-
- <p>Different responsibilities should be kept separate.</p>
-
-<h3> Related Concepts</h3>
-
-<ul><li><b>Cohesion</b> : Things inside a module should belong together</li>    
-<li><b>Coupling</b> : Modules should depend on each other as little as possible</li></ul>
-
-<p><strong>✔ High cohesion</strong></p>
-<p><strong>✔ Low coupling</strong></p>
-
-<p>👉 This makes systems:</p>
-
-<ul><li> Easier to understand</li>
-<li> Easier to change</li>
-<li> Easier to deploy</li>
-</ul>
-
-
- <h2>5. Why the Monolith Fails This Rule</h2>
-
-<p>In the spelling-mistake example:</p>
-
-<ul><li> Frontend + backend + database were tightly bound</li>
-<li> No separation</li>
-<li> One small change affected everything</ul></li>
-<p>
-If the frontend was <strong>separately deployable</strong>, the change would be:</p>
-
-<ul><li> Clear</li>
-<li> Safe</li>
-<li> Fast</li></ul>
-
 
 
 <h1>The Twelve-Factor App</h1>
@@ -384,10 +345,44 @@ principles are easier to deploy, scale, monitor, and maintain.
 For official documentation, visit:
 <a href="https://12factor.net/" target="_blank">https://12factor.net/</a>
 </p>
+<hr>
+ <h2>4. Architecture rules of thumb</h2> 
+ 
+ <h3>Separation of Concerns</h3>
 
+ <p>The concept of separation of concerns, introduced by Edsger Dijkstra, is a foundational principle in software design.</p>
+ <p>It states that a system should be divided into distinct parts, each handling a specific responsibility.</p>
+ <p> By treating different aspects independently, systems become easier to understand, develop, and maintain.</p>
 
+<ul><li><b>Cohesion</b> : Things inside a module should belong together</li>    
+<li><b>Coupling</b> : Modules should depend on each other as little as possible</li></ul>
 
- <h2>7. Three-Tier Architecture</h2>
+<p><strong>✔ High cohesion</strong></p>
+<p><strong>✔ Low coupling</strong></p>
+
+<p>
+Together, high cohesion and low coupling support the principle of separation of concerns<p>
+</p>well-structured systems naturally achieve both.
+</p>
+
+<hr>
+
+ <h2>5. Why the Monolith Fails This Rule</h2>
+
+<p>In the spelling-mistake example:</p>
+
+<ul><li> Frontend + backend + database were tightly bound</li>
+<li> No separation</li>
+<li> One small change affected everything</ul></li>
+<p>
+If the frontend was <strong>separately deployable</strong>, the change would be:</p>
+
+<ul><li> Clear</li>
+<li> Safe</li>
+<li> Fast</li></ul>
+<hr>
+<h2>A practical example</h2> 
+ <h3> Three-Tier Architecture</h3>
 
 <p>This splits the system into <b>three layers</b>:</p>
 
@@ -420,8 +415,8 @@ For official documentation, visit:
 <ul><li> If layers are tightly coupled, it becomes <strong>a hidden monolith</strong></li></ul>
 
 
-
-<h2>8. Handling Database Migrations</h2>
+<hr>
+<h2>6. Handling Database Migrations</h2>
 
 <p>Databases are different from application binaries because they store <b>both structure (schema)</b> and <b>data (state)</b>.
 </p>
@@ -528,8 +523,6 @@ name  &rarr;  first_name + last_name
   <li>Inconsistent</li>
 </ul>
 
-
----
 <h3>3. Databases Are Shared Resources</h3>
 
 <ul>
@@ -557,7 +550,7 @@ name  &rarr;  first_name + last_name
   <li>Careful sequencing</li>
 </ul>
 
-<hr/>
+
 
 <h3>5. Rollback Is Hard</h3>
 
@@ -578,9 +571,9 @@ An application binary is stateless and replaceable, but a database is stateful a
 </strong></p>
 
 
+<hr>
 
-
-<h2>9. Microservices</h2>
+<h2>7. Microservices</h2>
 
 <h3>What are Microservices?</h3>
 
@@ -643,9 +636,9 @@ CI/CD, containerization, orchestration, and observability.
 </p>
 
 
+<hr>
 
-
- <h2>10. Conway’s Law (Very Important)</h2>
+ <h2>8. Conway’s Law (Very Important)</h2>
 
 <blockquote>
   <p><strong>Software structure reflects team structure</strong></p>
@@ -719,9 +712,9 @@ developed, deployed, and operated by a single team independently.
 loosely coupled, well-communicating teams.
 </p>
 
+<hr>
 
-
-<h2>11. Service Compatibility (Tolerant Reader Pattern)</h2>
+<h2>9. Service Compatibility (Tolerant Reader Pattern)</h2>
 
 <h3>Problem</h3>
 <p>
@@ -815,9 +808,9 @@ more resilient distributed systems.
 </p>
 
 
+<hr>
 
-
- <h2>12. Microservices and Databases</h2>
+ <h2>10. Microservices and Databases</h2>
 
 Two options:
 
@@ -833,25 +826,21 @@ Two options:
 </ul>
 <p>👉 No single correct answer</p></ol>
 
+<hr>
 
+ <h2>11. DevOps, Architecture & Resilience</h2>
 
- <h2>13. DevOps, Architecture & Resilience</h2>
-
-<ol><p></p></ol>
+<p>DevOps goal:</p>
 <ul>
- <li>Speed</li>
- <li>Flexibility</li> </ul>
+ <li>deliver quickly</li>
+ <li>maintain flexibility and reliability</li> 
+</ul>
 
-<p>But also Challenges:</p>
+<p>Microservices align well with DevOps by enabling faster delivery of features through greater modularization.</p>
 
-<ul> <li>Monitoring</li>
-<li> Health-check APIs</li>
-<li> Load balancers</li>
- <li>Automation</li> </ul>
+<p>But they also increase system complexity and the likelihood of failures due to more integration points.</p>
+<p>While automated testing ensures quality during deployment, it cannot prevent runtime issues, making resilience essential.</p>
 
-<p>Example:</p>
-
-<ul><li> If a service fails → remove it automatically</li></ul>
 
 
 
