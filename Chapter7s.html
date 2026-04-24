@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chapter 7 - Deploying the Code</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        .section-title {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Chapter 7 – Deploying the Code</h1>
+
+<p>
+    This chapter explains how modern organizations deploy software to servers, why many deployment tools exist, 
+    and how systems like Puppet, Ansible, Salt, Docker help automate reliable deployments.
+</p>
+
+<hr>
+
+<h2>1. Why Are There So Many Deployment Systems?</h2>
+<p>
+    Deployment is complex because organizations run many applications on many servers with differing requirements 
+    and frequent release cycles. Manual installation becomes impossible, leading to the need for automated tools.
+</p>
+
+<ul>
+    <li>Large organizations have numerous servers and applications.</li>
+    <li>Each environment (dev, test, prod) requires different configurations.</li>
+    <li>Deployments must be reliable, secure, and repeatable.</li>
+</ul>
+
+<hr>
+
+<h2>2. Typical Enterprise Application Architecture</h2>
+
+<p>A common architecture includes:</p>
+<ul>
+    <li>Web Server</li>
+    <li>Application Server</li>
+    <li>Database Server</li>
+</ul>
+
+<p>
+    For small setups, manual deployment works. For large-scale infrastructure, automation tools become essential.
+</p>
+
+<hr>
+
+<h2>3. Challenges Deployment Tools Must Solve</h2>
+
+<h3 class="section-title">A. Configuring the Base Operating System</h3>
+
+<p>
+    Applications often require a specific OS or certain base packages. Deployment tools help ensure 
+    that every machine starts from a consistent and reliable base environment.
+</p>
+
+<p>Common approaches:</p>
+
+<ul>
+    <li>
+        <strong>Bare-metal/VM installers</strong> such as Red Hat Satellite and Cobbler  
+        (install a fresh OS and base packages via network boot).
+    </li>
+    <li>
+        <strong>Image-based provisioning</strong> used in cloud platforms like AWS, Azure, OpenStack  
+        (new VMs created from preconfigured images).
+    </li>
+    <li>
+        <strong>Container base images</strong> such as Docker  
+        (define a base image and layer changes on top).
+    </li>
+</ul>
+
+<hr>
+
+<h3 class="section-title">B. Describing Clusters</h3>
+
+<p>
+    Deployments must define how groups of machines work together. These cluster descriptions ensure 
+    each machine takes on its proper role (web server, database, load balancer, etc.).
+</p>
+
+<ul>
+    <li>Puppet, Ansible, and Salt allow defining machine roles and clusters.</li>
+    <li>Docker provides Compose/Swarm for describing multi-container systems.</li>
+    <li>Cloud platforms like AWS offer templates for multi-VM deployments.</li>
+</ul>
+
+<hr>
+
+<h3 class="section-title">C. Delivering Packages to a System</h3>
+
+<p>
+    Most applications can be delivered as package files, such as RPMs or .deb files. These packages:
+</p>
+
+<ul>
+    <li>Provide versioning</li>
+    <li>Include integrity checks (checksums)</li>
+    <li>Make installation reproducible and predictable</li>
+</ul>
+
+<p>
+    Delivery is usually done via OS package managers (yum, apt), but configuration tools can also deploy 
+    packages and files directly.
+</p>
+
+<hr>
+
+<h3 class="section-title">D. Managing Configuration Files</h3>
+
+<p>
+    Applications require different configuration files depending on the environment (test vs production). 
+    Therefore, tools must generate configuration files dynamically using templates.
+</p>
+
+<p>Common configuration file formats:</p>
+<ul>
+    <li>XML</li>
+    <li>YAML (YML)</li>
+    <li>JSON</li>
+    <li>INI / TOML</li>
+</ul>
+
+<p>
+    Templates allow placeholders that get replaced during deployment with values specific to the 
+    target machine. This simplifies handling configuration changes across many environments.
+</p>
+
+<p>
+    Other methods (less preferred) include storing configuration in databases or using CLI APIs, 
+    but these reduce flexibility and complicate declarative configuration models.
+</p>
+
+<hr>
+
+<h2>Virtualization Stacks</h2>
+
+<p>
+    Organizations with internal server farms widely use virtualization to isolate components of their applications. 
+    Virtualization provides virtual machines (VMs) that simulate hardware such as CPUs and network cards.
+</p>
+
+<p>
+    Virtualization can also emulate entirely different hardware architectures. For example, tools like QEMU allow 
+    developers to emulate mobile devices. Emulation works more efficiently when the host and target architectures 
+    are similar (e.g., x86_64 host emulating x86_64 Android).
+</p>
+
+<p>
+    In server environments, the goal is usually isolation—not full hardware emulation. Virtual machines help limit 
+    resource consumption issues by allocating dedicated CPU cores, memory, and other resources per VM.
+</p>
+
+<p>
+    Containers offer similar isolation but do not emulate hardware. They share the host OS kernel, making them 
+    lightweight and suitable for most server applications.
+</p>
+
+<h3>Hypervisors</h3>
+
+<p>
+    Hypervisors abstract and manage hardware for VMs. They come in two main types:
+</p>
+
+<ul>
+    <li><strong>Bare-metal hypervisors</strong> – run directly on hardware (e.g., VMware ESXi).</li>
+    <li><strong>Hosted hypervisors</strong> – run inside an existing OS (e.g., KVM on Linux).</li>
+</ul>
+
+<p>Common virtualization technologies include:</p>
+
+<ul>
+    <li><strong>VMware ESXi</strong> – proprietary, widely used in enterprises.</li>
+    <li><strong>KVM</strong> – open source, cost-effective for large deployments.</li>
+    <li><strong>Xen</strong> – supports paravirtualization for improved efficiency.</li>
+    <li><strong>VirtualBox</strong> – open source, popular among developers for local OS emulation.</li>
+</ul>
+
+<p>
+    Many hypervisors expose APIs for automation. The <strong>libvirt</strong> API supports managing KVM, QEMU, Xen, LXC, and others.
+</p>
+
+<hr>
+
+<h2>Executing Code on the Client</h2>
+
+<p>
+    Configuration management systems often allow administrators to execute commands directly on selected nodes 
+    based on their roles. This is useful for tasks such as debugging or bulk maintenance.
+</p>
+
+<h1>Introduction to Automation and Ansible</h1>
+
+<div class="section">
+<p>Automation is one of the defining techniques of DevOps engineers, and it's not without reason. 
+Both developers and operators have long used automation to provide services—operators automate 
+server configuration, while developers automate build processes.</p>
+
+<p>Historically, tools such as CFEngine allowed administrators for the first time to define system 
+state using a Domain Specific Language (DSL). Since then, configuration management tools have 
+grown rapidly. Among the top tools used today are CFEngine, Chef, Puppet, Salt, and Ansible.</p>
+
+<p>Ansible has gained huge popularity due to its simplicity—using YAML syntax, agentless 
+architecture, and low learning curve. This makes Ansible ideal for beginners and experts alike.</p>
+</div>
+
+<h1>Installing Ansible (Ubuntu Example)</h1>
+
+<div class="section">
+<h3>Prerequisites</h3>
+<p>You need an Ubuntu-based system.</p>
+
+<h3>Installation Steps</h3>
+
+<pre>
+$ sudo apt-get install software-properties-common
+$ sudo apt-add-repository ppa:ansible/ansible
+$ sudo apt-get update
+$ sudo apt-get install ansible
+$ ansible --version
+</pre>
+
+<p>Once installed, you can immediately start writing playbooks to automate tasks.</p>
+</div>
+
+<h1>Ansible Automation Demo – Install Nginx & Deploy Website</h1>
+
+<div class="section">
+
+<h2>Folder Structure</h2>
+<pre>
+ansible-demo/
+├── inventory.ini
+├── nginx-local.yml
+└── website/
+    └── index.html
+</pre>
+
+<h2>inventory.ini</h2>
+<pre>
+[local]
+localhost ansible_connection=local
+</pre>
+
+<h2>website/index.html</h2>
+<pre>
+<h1>Website deployed using Ansible on localhost!</h1>
+</pre>
+
+<h2>nginx-local.yml (Playbook)</h2>
+<pre>
+---
+- name: Install Nginx and deploy website on localhost
+  hosts: local
+  become: yes
+
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Start and enable Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Deploy website folder
+      copy:
+        src: website/
+        dest: /var/www/html/
+        owner: www-data
+        group: www-data
+        mode: '0644'
+</pre>
+
+<h2>Run the Playbook</h2>
+<pre>
+$ ansible-playbook -i inventory.ini nginx-local.yml --ask-become-pass
+</pre>
+
+<h2>Test Website</h2>
+<pre>
+http://localhost
+</pre>
+
+<p>You should now see your deployed HTML page via Nginx!</p>
+</div>
+
+<h1>Advantages of Using Ansible</h1>
+
+<div class="section">
+<ul>
+    <li><strong>Simple, human-readable YAML</strong> — anyone can learn it quickly.</li>
+    <li><strong>Agentless architecture</strong> — no agents required on managed nodes.</li>
+    <li><strong>Idempotent</strong> — safe to run repeatedly without breaking anything.</li>
+    <li><strong>Fast setup</strong> — install and use immediately.</li>
+    <li><strong>Reusable playbooks</strong> — automate once, use everywhere.</li>
+    <li><strong>Supports cloud, servers, containers, and network devices</strong>.</li>
+    <li><strong>Ideal for CI/CD pipelines</strong>.</li>
+</ul>
+</div>
+
+<h2>Conclusion</h2>
+<p>With just a few files and simple commands, Ansible can automate server setup, 
+install Nginx, and deploy your website. Its simplicity and power make it one of the 
+most valuable tools for DevOps professionals.</p>
+
+
+<h1>Step 1 – Create Inventory File with Multiple Servers</h1>
+
+<div class="section">
+<p>Your <strong>inventory.ini</strong> will list all servers where you want Nginx deployed.</p>
+
+<h2>inventory.ini</h2>
+<pre>
+[webservers]
+server1 ansible_host=192.168.1.10 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa
+server2 ansible_host=192.168.1.11 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa
+server3 ansible_host=192.168.1.12 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa
+</pre>
+
+</div>
+
+<h1>Step 2 – Place Your Web Content</h1>
+
+<div class="section">
+<h2>website/index.html</h2>
+
+<pre>
+<h1>Website deployed using Ansible on multiple servers!</h1>
+</pre>
+</div>
+
+<h1>Step 3 – Create Playbook for Multiple Servers</h1>
+
+<div class="section">
+
+<h2>nginx-multi.yml</h2>
+<pre>
+---
+- name: Install Nginx and deploy website on multiple servers
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Start and enable Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Deploy website folder
+      copy:
+        src: website/
+        dest: /var/www/html/
+        owner: www-data
+        group: www-data
+        mode: '0644'
+</pre>
+</div>
+
+<h1>Step 4 – Run the Playbook</h1>
+
+<div class="section">
+<p>Use the below command to run the automation:</p>
+
+<pre>
+$ ansible-playbook -i inventory.ini nginx-multi.yml --ask-become-pass
+</pre>
+
+<p>This will:</p>
+<ul>
+    <li>Connect to all servers in <strong>[webservers]</strong></li>
+    <li>Install Nginx</li>
+    <li>Start the service</li>
+    <li>Copy your website to all servers</li>
+</ul>
+</div>
+
+<h1>Step 5 – Test Deployment</h1>
+
+<div class="section">
+<p>Open your browser and check:</p>
+
+<pre>
+http://192.168.1.10
+http://192.168.1.11
+http://192.168.1.12
+</pre>
+
+<p>You should see your HTML page served from each server.</p>
+</div>
+
+<h1>Why Use Ansible for Multi-Server Automation?</h1>
+
+<div class="section">
+<ul>
+    <li><strong>Agentless</strong> – Uses SSH, no additional software required on servers.</li>
+    <li><strong>Fast deployment</strong> – Push configuration to 1, 10, or 100 servers easily.</li>
+    <li><strong>Consistent automation</strong> – All servers get identical configuration.</li>
+    <li><strong>Idempotent</strong> – Running again won’t break anything.</li>
+    <li><strong>Simple YAML playbooks</strong> – Easy to read, write, and maintain.</li>
+    <li><strong>Scalable</strong> – Add new servers to inventory and run playbook again.</li>
+</ul>
+</div>
+
+<h1>Conclusion</h1>
+
+<div class="section">
+<p>Ansible makes it extremely easy to deploy software like Nginx and distribute web applications 
+across multiple servers. With a simple inventory file and a small YAML playbook, 
+you can automate deployments that would normally take hours—reducing errors and saving time.</p>
+</div>
+
+<hr>
+
+<p>
+    In Puppet, this feature is provided by <strong>MCollective (Marionette Collective)</strong>.
+</p>
+
+
+<hr>
+<h2>Puppet Master and Puppet Agents</h2>
+
+<p>
+    Puppet is a widely used deployment and configuration management system, especially in large organizations. 
+    It uses a client–server model where <strong>Puppet agents</strong> (clients) periodically contact the 
+    <strong>Puppet master</strong> (server) to check for configuration updates.
+</p>
+
+<h3>How Puppet Works</h3>
+
+<ol>
+    <li>
+        The Puppet agent initiates communication with the Puppet master to check for updates. 
+        This communication is typically secured using SSL.
+    </li>
+    <li>
+        The agent sends its credentials so the master can identify which node is requesting updates.
+    </li>
+    <li>
+        The Puppet master compiles the node's configuration into a <strong>Puppet catalogue</strong>, based on:
+        <ul>
+            <li>Role-based configurations</li>
+            <li>Node-specific configurations</li>
+            <li>Inherited roles and modules</li>
+        </ul>
+    </li>
+    <li>
+        The agent applies the received configuration locally to match the desired state.
+    </li>
+</ol>
+
+<p>
+    Puppet follows a <strong>declarative approach</strong>: administrators describe the desired state of a system, 
+    and Puppet determines how to enforce it.
+</p>
+
+<h3>Pros of Puppet</h3>
+<ul>
+    <li>A large community with extensive documentation and ready-made modules.</li>
+    <li>Many reusable modules for common software deployments.</li>
+</ul>
+
+<h3>Cons of Puppet</h3>
+<ul>
+    <li>Puppet agents require several dependencies, including a Ruby runtime that may not match older enterprise OS versions.</li>
+    <li>Puppet configurations can be complex to write, debug, and test.</li>
+</ul>
+
+
+<h2>Example: Deploying Nginx Using Puppet</h2>
+
+<h3>Step 1 — Create Puppet Manifest</h3>
+
+<p>Create a file named <code>site.pp</code> with the following content:</p>
+
+<pre>
+<code>
+# site.pp
+node default {
+
+  # Install nginx
+  package { 'nginx':
+    ensure =&gt; installed,
+  }
+
+  # Ensure service is running
+  service { 'nginx':
+    ensure     =&gt; running,
+    enable     =&gt; true,
+    require    =&gt; Package['nginx'],
+  }
+
+  # Deploy website folder
+  file { '/var/www/html/':
+    ensure =&gt; directory,
+    owner  =&gt; 'www-data',
+    group  =&gt; 'www-data',
+    mode   =&gt; '0755',
+  }
+
+  file { '/var/www/html/index.html':
+    ensure  =&gt; file,
+    content =&gt; "&lt;h1&gt;Website deployed on localhost using Puppet!&lt;/h1&gt;\n",
+    owner   =&gt; 'www-data',
+    group   =&gt; 'www-data',
+    mode    =&gt; '0644',
+  }
+}
+</code>
+</pre>
+
+<h3>Step 2 — Apply Manifest Locally</h3>
+
+<p>Run the following command:</p>
+
+<pre>
+<code>sudo puppet apply site.pp</code>
+</pre>
+
+<h3>Result</h3>
+
+<p>
+Puppet will install <strong>nginx</strong>, ensure the service is running, and deploy the 
+<code>index.html</code> file — similar to the behavior of your Ansible playbook.
+</p>
+
+
+<hr>
+<h2>SaltStack</h2>
+
+<p>
+SaltStack, commonly known as <strong>Salt</strong>, is a fast and scalable configuration 
+management and remote execution tool. It allows administrators to define the desired 
+state of systems using declarative configuration files called <strong>Salt States</strong>.
+Salt can manage large server farms efficiently due to its event-driven and high-speed 
+communication system.
+</p>
+
+<p>
+Salt typically uses a <strong>master–minion architecture</strong>, where the Salt Master 
+orchestrates and controls configuration, while Minions execute those configurations.  
+For smaller setups or testing, Salt also supports a <strong>masterless mode</strong> using:
+<code>salt-call --local</code>.
+</p>
+
+<h3>Key Advantages</h3>
+<ul>
+    <li>Fast execution using event-driven architecture.</li>
+    <li>Flexible — supports both master/minion and masterless modes.</li>
+    <li>Simple YAML-based state files.</li>
+    <li>Large community and many built-in modules.</li>
+</ul>
+
+<h3>Challenges</h3>
+<ul>
+    <li>Salt Master setup can be complex for beginners.</li>
+    <li>ZeroMQ communication may require additional configuration.</li>
+    <li>Learning pillars, grains, and state system takes time.</li>
+</ul>
+
+<p>
+SaltStack provides a powerful and efficient way to automate configuration and software 
+deployment, similar to Puppet and Chef, but often faster and more flexible in execution.
+</p>
+
+
+<h1>SaltStack Example — Install Nginx & Deploy Website</h1>
+
+<p>This SaltStack example demonstrates how to:</p>
+<ul>
+    <li>✔ Install Nginx</li>
+    <li>✔ Deploy a website file</li>
+    <li>✔ Run Salt locally using <b>salt-call --local</b></li>
+</ul>
+
+<h2>Folder Structure</h2>
+<pre>
+salt/
+ └── web/
+     ├── init.sls
+     └── index.html
+</pre>
+
+<h2>Step 1 — Salt State File</h2>
+<p><b>salt/web/init.sls</b></p>
+<pre>
+nginx:
+  pkg.installed: []
+  service.running:
+    - enable: True
+
+/var/www/html:
+  file.directory:
+    - user: www-data
+    - group: www-data
+    - mode: 755
+
+/var/www/html/index.html:
+  file.managed:
+    - source: salt://web/index.html
+    - user: www-data
+    - group: www-data
+    - mode: 644
+</pre>
+
+<h2>Step 2 — HTML File</h2>
+<p><b>salt/web/index.html</b></p>
+<pre>
+<h1>Website deployed on localhost using SaltStack!</h1>
+</pre>
+
+<h2>Step 3 — Apply Salt State Locally</h2>
+<pre>
+sudo salt-call --local state.apply web
+</pre>
+
+<h2>✔ Output</h2>
+<p>SaltStack installs Nginx and copies <code>index.html</code> into <code>/var/www/html</code> successfully, similar to Ansible, Puppet, and Chef.</p>
+
+
+<hr>
+
+<h2>Chef: Configuration Management System</h2>
+
+<p>
+    Chef is another popular configuration management and infrastructure automation tool used in many organizations. 
+    Like Puppet, it allows you to define how systems should be configured, but Chef uses a different approach and architecture.
+</p>
+
+<h3>Chef Architecture</h3>
+
+<p>Chef follows a <strong>client–server model</strong> consisting of:</p>
+
+<ul>
+    <li><strong>Chef Server</strong> – Stores cookbooks, roles, environments, and policies.</li>
+    <li><strong>Chef Client</strong> – Runs on each node and applies configuration.</li>
+    <li><strong>Workstation</strong> – Where developers create cookbooks and upload them to the Chef server.</li>
+</ul>
+
+<h3>How Chef Works</h3>
+
+<ol>
+    <li>The Chef client connects to the Chef server to check for updates.</li>
+    <li>The node authenticates using its client key.</li>
+    <li>The Chef server determines which configuration (run list) applies to the node.</li>
+    <li>The Chef client downloads the necessary cookbooks (recipes, templates, files).</li>
+    <li>The client executes the recipe instructions to bring the node to its desired state.</li>
+</ol>
+
+<p>
+    Unlike Puppet’s declarative model, Chef uses a more <strong>imperative</strong> and 
+    <strong>Ruby-based domain-specific language (DSL)</strong> to define configurations.
+</p>
+
+<h3>Chef Concepts</h3>
+
+<ul>
+    <li><strong>Cookbooks</strong> – Collections of recipes and resources.</li>
+    <li><strong>Recipes</strong> – Define the actual steps to configure software.</li>
+    <li><strong>Resources</strong> – Declare actions (install package, create file, start service).</li>
+    <li><strong>Run List</strong> – The order of recipes a node must execute.</li>
+    <li><strong>Ohai</strong> – A tool that collects system information and sends it to the Chef server.</li>
+</ul>
+
+<h3>Pros of Chef</h3>
+<ul>
+    <li>Highly flexible due to Ruby-based DSL.</li>
+    <li>Large ecosystem of community cookbooks.</li>
+    <li>Strong integration with cloud platforms such as AWS and Azure.</li>
+</ul>
+
+<h3>Cons of Chef</h3>
+<ul>
+    <li>Steeper learning curve because configurations are code-heavy.</li>
+    <li>Chef Server setup is more complex than agent-only systems.</li>
+    <li>Testing Chef cookbooks can be time-consuming.</li>
+</ul>
+
+<h3>Example Workflow Summary</h3>
+
+<ol>
+    <li>Create cookbook on workstation.</li>
+    <li>Upload cookbook to Chef server.</li>
+    <li>Node checks in → receives cookbook → applies configuration.</li>
+</ol>
+
+
+
+<h1>Chef Example — Install Nginx & Deploy Website</h1>
+
+<p>This example demonstrates how to:</p>
+<ul>
+    <li>✔ Install Nginx</li>
+    <li>✔ Deploy a website</li>
+    <li>✔ Run Chef locally using <b>chef-solo</b> (no Chef Server required)</li>
+</ul>
+
+<h2>Folder Structure</h2>
+<pre>
+chef/
+ ├── solo.rb
+ ├── runlist.json
+ └── cookbooks/
+     └── myweb/
+         ├── recipes/
+         │   └── default.rb
+         └── files/default/index.html
+</pre>
+
+<h2>Step 1 — Create <code>solo.rb</code></h2>
+<p><b>solo.rb</b></p>
+<pre>
+cookbook_path ["./cookbooks"]
+</pre>
+
+<h2>Step 2 — Create Runlist</h2>
+<p><b>runlist.json</b></p>
+<pre>
+{
+  "run_list": ["recipe[myweb]"]
+}
+</pre>
+
+<h2>Step 3 — Chef Recipe</h2>
+<p><b>cookbooks/myweb/recipes/default.rb</b></p>
+<pre>
+package 'nginx'
+
+service 'nginx' do
+  action [:enable, :start]
+end
+
+directory '/var/www/html' do
+  owner 'www-data'
+  group 'www-data'
+  mode '0755'
+end
+
+cookbook_file '/var/www/html/index.html' do
+  source 'index.html'
+  owner 'www-data'
+  group 'www-data'
+  mode '0644'
+end
+</pre>
+
+<h2>Step 4 — Add Your HTML File</h2>
+<p><b>cookbooks/myweb/files/default/index.html</b></p>
+<pre>
+<h1>Website deployed on localhost using Chef!</h1>
+</pre>
+
+<h2>Step 5 — Run Chef Solo</h2>
+<pre>
+sudo chef-solo -c solo.rb -j runlist.json
+</pre>
+
+<h2>✔ Output</h2>
+<p>Chef installs Nginx and deploys your HTML file successfully on localhost.</p>
+
+
+
+</body>
+</html>
