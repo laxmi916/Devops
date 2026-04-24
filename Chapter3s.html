@@ -127,6 +127,26 @@
 <p><b>👉 Monoliths slow down Continuous Delivery</b></p>
 
 <hr>
+ <h2>4. Architecture rules of thumb</h2> 
+ 
+ <h3>Separation of Concerns</h3>
+
+ <p>The concept of separation of concerns, introduced by Edsger Dijkstra, is a foundational principle in software design.</p>
+ <p>It states that a system should be divided into distinct parts, each handling a specific responsibility.</p>
+ <p> By treating different aspects independently, systems become easier to understand, develop, and maintain.</p>
+
+<ul><li><b>Cohesion</b> : Things inside a module should belong together</li>    
+<li><b>Coupling</b> : Modules should depend on each other as little as possible</li></ul>
+
+<p><strong>✔ High cohesion</strong></p>
+<p><strong>✔ Low coupling</strong></p>
+
+<p>
+Together, high cohesion and low coupling support the principle of separation of concerns<p>
+</p>well-structured systems naturally achieve both.
+</p>
+
+
 <h1>The Twelve-Factor App</h1>
 
 <p>
@@ -345,26 +365,6 @@ principles are easier to deploy, scale, monitor, and maintain.
 For official documentation, visit:
 <a href="https://12factor.net/" target="_blank">https://12factor.net/</a>
 </p>
-<hr>
- <h2>4. Architecture rules of thumb</h2> 
- 
- <h3>Separation of Concerns</h3>
-
- <p>The concept of separation of concerns, introduced by Edsger Dijkstra, is a foundational principle in software design.</p>
- <p>It states that a system should be divided into distinct parts, each handling a specific responsibility.</p>
- <p> By treating different aspects independently, systems become easier to understand, develop, and maintain.</p>
-
-<ul><li><b>Cohesion</b> : Things inside a module should belong together</li>    
-<li><b>Coupling</b> : Modules should depend on each other as little as possible</li></ul>
-
-<p><strong>✔ High cohesion</strong></p>
-<p><strong>✔ Low coupling</strong></p>
-
-<p>
-Together, high cohesion and low coupling support the principle of separation of concerns<p>
-</p>well-structured systems naturally achieve both.
-</p>
-
 <hr>
 
  <h2>5. Why the Monolith Fails This Rule</h2>
